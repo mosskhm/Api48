@@ -1,0 +1,74 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-172036161-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-172036161-1');
+    </script>
+    <title>LNB - Le pari des pros!</title>
+    <base href="./">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="expires" content="0">
+    <meta name="Description" content="Rejoignez LNB aujourd'hui et pariez sur vos sports préférés du monde entier, y compris le football, le basket-ball, le tennis et plus encore! la plateforme de paris fiable et facile à utiliser, placez vos paris et devenez le prochain millionnaire!">
+
+    <link rel="stylesheet" href="https://m.lnbpari.com/main.css">
+    <link type="image/x-icon" rel="icon" href="https://m.lnbpari.com/assets/mobile/images/favicon/favicon-lnb.png">
+
+</head>
+
+<body>
+    <div class="top-bar-container">
+        <div class="topbar-row">
+            <section class="left">
+                <div class="logo">
+                    <img alt="COMPANY_LOGO" src="https://m.lnbpari.com/assets/mobile/images/logo/logo-lnb.svg">
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="user-layout-container">
+        <balance-row>
+            <div class="balance-row">
+                <div class="user-balance">
+                    <span>Hi, @ViewBag.FirstName (ID: @ViewBag.UserID)</span>
+                </div>
+            </div>
+        </balance-row>
+        <not-activated-account>
+        </not-activated-account>
+        <user-deposit>
+            <div class="user-deposit-container">
+                <div class="header">
+                    <i class="icon-Deposit"></i>
+                    <h1>Versement</h1>
+                </div>
+            </div>
+
+            <script src="https://cdn.kkiapay.me/k.js"></script>
+            <br><br>
+            <center>
+                <kkiapay-widget amount="@ViewBag.Amount"
+                                key="@ViewBag.KEY"
+                                url="@ViewBag.LogoURL"
+                                position="@ViewBag.Position"
+                                theme="@ViewBag.Theme"
+                                sandbox="@ViewBag.Sandbox"
+                                name="@ViewBag.Name"
+                                callback="@ViewBag.CallBackURL">
+                </kkiapay-widget>
+                <br>
+                <a href="https://m.lnbpari.com/#/user/deposit" style="color:red;font-size:15px;">Annuler</a>
+            </center>
+        </div>
+            
+</body>
+</html>

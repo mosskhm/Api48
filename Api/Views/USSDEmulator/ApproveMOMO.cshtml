@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "ApproveMOMO";
+    Layout = "~/Views/Shared/_USSD1.cshtml";
+}
+
+<div class="table-title">
+    <h3>Approve MOMO Games Bet</h3>
+</div>
+
+<table class="table-fill">
+    <thead>
+        <tr>
+            <th class="text-left">MSISDN</th>
+            <th class="text-left">Bet DateTime</th>
+            <th class="text-left">Amount</th>
+            <th class="text-left">Number of Games</th>
+            <th class="text-left">MOMO Result</th>
+            <th class="text-left">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody class="table-hover">
+        @if (ViewBag.Games2Approve != null)
+        {
+
+            foreach (var i in ViewBag.Games2Approve)
+            {
+                <tr>
+                    <td class="text-left">@i.msisdn</td>
+                    <td class="text-left">@i.date_time</td>
+                    <td class="text-left">@i.amount</td>
+                    <td class="text-left">@i.number_of_games</td>
+                    <td class="text-left">@i.result</td>
+                    <td class="text-left"><a href="/USSDEmulator/DoApprove/@i.dya_id">Approve MOMO</a></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

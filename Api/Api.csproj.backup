@@ -1,0 +1,1139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.Toolset.4.11.0\build\Microsoft.Net.Compilers.Toolset.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.Toolset.4.11.0\build\Microsoft.Net.Compilers.Toolset.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A31A15C1-B9F9-4EC9-9A11-20D13349D69C}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Api</RootNamespace>
+    <AssemblyName>Api</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+    <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.28.2.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.28.2\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="JamaaTech.Smpp.Net.Client.v1.4, Version=1.4.3.23397, Culture=neutral, PublicKeyToken=b4d987d2a0589433, processorArchitecture=MSIL">
+      <HintPath>..\packages\JamaaTech.Smpp.1.4.3\lib\JamaaTech.Smpp.Net.Client.v1.4.dll</HintPath>
+    </Reference>
+    <Reference Include="JamaaTech.Smpp.Net.Lib.v1.4, Version=1.4.3.40745, Culture=neutral, PublicKeyToken=b4d987d2a0589433, processorArchitecture=MSIL">
+      <HintPath>..\packages\JamaaTech.Smpp.1.4.3\lib\JamaaTech.Smpp.Net.Lib.v1.4.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.3.8.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.Streams.1.3.8\lib\net462\K4os.Compression.LZ4.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Hash.xxHash, Version=1.0.8.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Hash.xxHash.1.0.8\lib\net462\K4os.Hash.xxHash.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.TimeProvider, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.TimeProvider.8.0.1\lib\net462\Microsoft.Bcl.TimeProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=8.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Abstractions.8.1.1\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=8.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.8.1.1\lib\net472\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=8.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.8.1.1\lib\net472\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=8.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.8.1.1\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Services2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\packages\Microsoft.Web.Services2.2.0.3.0\lib\net11\Microsoft.Web.Services2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data, Version=9.0.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.9.0.0\lib\net48\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=112.1.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.112.1.0\lib\net48\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Configuration.ConfigurationManager.8.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=8.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.8.0.1\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=8.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.8.1.1\lib\net472\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Pipelines, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Pipelines.8.0.0\lib\net462\System.IO.Pipelines.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=8.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.8.0.4\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.3.0\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.3.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="ZstdSharp, Version=0.8.1.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZstdSharp.Port.0.8.1\lib\net462\ZstdSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AirTelCG\ussd.ashx.cs">
+      <DependentUpon>ussd.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="AirTelCG\momo.ashx.cs">
+      <DependentUpon>momo.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
+    <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
+    <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageAreaRegistration.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageConfigurationExtensions.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\CollectionModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ComplexTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\DictionaryModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumValueDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\IModelDocumentationProvider.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\KeyValuePairModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescriptionGenerator.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameAttribute.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameHelper.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterAnnotation.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\SimpleTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageApiModel.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleGenerator.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleKey.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\ImageSample.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\InvalidSample.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\ObjectGenerator.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
+    <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Cache\BtoBet.cs" />
+    <Compile Include="Cache\Campaigns.cs" />
+    <Compile Include="Cache\FS.cs" />
+    <Compile Include="Cache\FWBanks.cs" />
+    <Compile Include="Cache\iDoBet.cs" />
+    <Compile Include="Cache\Prices.cs" />
+    <Compile Include="Cache\Promo.cs" />
+    <Compile Include="Cache\ServerSettings.cs" />
+    <Compile Include="Cache\Services.cs" />
+    <Compile Include="Cache\SMS.cs" />
+    <Compile Include="Cache\USSD.cs" />
+    <Compile Include="CampaignMNG\sub_notification.ashx.cs">
+      <DependentUpon>sub_notification.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="CellC\sub_callback.ashx.cs">
+      <DependentUpon>sub_callback.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="CellC\ussd_callback.ashx.cs">
+      <DependentUpon>ussd_callback.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="CommonFuncations\AirTelCG.cs" />
+    <Compile Include="CommonFuncations\airteltigo.cs" />
+    <Compile Include="CommonFuncations\B2Tech142.cs" />
+    <Compile Include="CommonFuncations\B2TechCGAirtel.cs" />
+    <Compile Include="CommonFuncations\B2TechCGMTN.cs" />
+    <Compile Include="CommonFuncations\B2TechGNMTN.cs" />
+    <Compile Include="CommonFuncations\B2TechGNOrange.cs" />
+    <Compile Include="CommonFuncations\B2TechLNBMoov.cs" />
+    <Compile Include="CommonFuncations\B2TechLNBMTN.cs" />
+    <Compile Include="CommonFuncations\BankCollectionInLine.cs" />
+    <Compile Include="CommonFuncations\BankTransfer.cs" />
+    <Compile Include="CommonFuncations\Base64.cs" />
+    <Compile Include="CommonFuncations\Benin.cs" />
+    <Compile Include="CommonFuncations\Berelo.cs" />
+    <Compile Include="CommonFuncations\Bill.cs" />
+    <Compile Include="CommonFuncations\BtoBet.cs" />
+    <Compile Include="CommonFuncations\CallSoap.cs" />
+    <Compile Include="CommonFuncations\Cameroon.cs" />
+    <Compile Include="CommonFuncations\CashToken.cs" />
+    <Compile Include="CommonFuncations\CellC.cs" />
+    <Compile Include="CommonFuncations\ChargeAirTime.cs" />
+    <Compile Include="CommonFuncations\CheckUserState.cs" />
+    <Compile Include="CommonFuncations\crbt.cs" />
+    <Compile Include="CommonFuncations\CreateVoucher.cs" />
+    <Compile Include="CommonFuncations\Curl.cs" />
+    <Compile Include="CommonFuncations\DesEncDec.cs" />
+    <Compile Include="CommonFuncations\DusanLotto.cs" />
+    <Compile Include="CommonFuncations\DYACheckAccount.cs" />
+    <Compile Include="CommonFuncations\DYACheckTransaction.cs" />
+    <Compile Include="CommonFuncations\DYAReceiveMoney.cs" />
+    <Compile Include="CommonFuncations\DYATransferMoney.cs" />
+    <Compile Include="CommonFuncations\EcoNet.cs" />
+    <Compile Include="CommonFuncations\ECWBenin.cs" />
+    <Compile Include="CommonFuncations\Email.cs" />
+    <Compile Include="CommonFuncations\Evina.cs" />
+    <Compile Include="CommonFuncations\Flutterwave.cs" />
+    <Compile Include="CommonFuncations\Fulfillment.cs" />
+    <Compile Include="CommonFuncations\GoogleAnalytics.cs" />
+    <Compile Include="CommonFuncations\Guinea.cs" />
+    <Compile Include="CommonFuncations\HML.cs" />
+    <Compile Include="CommonFuncations\IC.cs" />
+    <Compile Include="CommonFuncations\iDoBet.cs" />
+    <Compile Include="CommonFuncations\iDoBetLNBPariMoovBenin.cs" />
+    <Compile Include="CommonFuncations\iDoBetLNBPariMTNBenin.cs" />
+    <Compile Include="CommonFuncations\iDoBetMoov.cs" />
+    <Compile Include="CommonFuncations\iDoBetMoovQA.cs" />
+    <Compile Include="CommonFuncations\iDoBetMTNCameroon.cs" />
+    <Compile Include="CommonFuncations\iDoBetMTNCongo.cs" />
+    <Compile Include="CommonFuncations\iDoBetMTNGuinea.cs" />
+    <Compile Include="CommonFuncations\iDoBetMTNNG.cs" />
+    <Compile Include="CommonFuncations\iDoBetOrangeCameroon.cs" />
+    <Compile Include="CommonFuncations\iDoBetOrangeGuinea.cs" />
+    <Compile Include="CommonFuncations\IMI.cs" />
+    <Compile Include="CommonFuncations\Interswitch.cs" />
+    <Compile Include="CommonFuncations\Login.cs" />
+    <Compile Include="CommonFuncations\MADAPI.cs" />
+    <Compile Include="CommonFuncations\md5.cs" />
+    <Compile Include="CommonFuncations\Mobifingg.cs" />
+    <Compile Include="CommonFuncations\Moov.cs" />
+    <Compile Include="CommonFuncations\MTNOpeanAPI.cs" />
+    <Compile Include="CommonFuncations\MyHisa.cs" />
+    <Compile Include="CommonFuncations\Namibia.cs" />
+    <Compile Include="CommonFuncations\NineMobile.cs" />
+    <Compile Include="CommonFuncations\NJNG.cs" />
+    <Compile Include="CommonFuncations\Notifications.cs" />
+    <Compile Include="CommonFuncations\Orange.cs" />
+    <Compile Include="CommonFuncations\Paga.cs" />
+    <Compile Include="CommonFuncations\PISIMobile.cs" />
+    <Compile Include="CommonFuncations\PISIMobileNew.cs" />
+    <Compile Include="CommonFuncations\ProcessXML.cs" />
+    <Compile Include="CommonFuncations\RefundAirTime.cs" />
+    <Compile Include="CommonFuncations\SayThanks.cs" />
+    <Compile Include="CommonFuncations\SDPWap.cs" />
+    <Compile Include="CommonFuncations\SendSMS.cs" />
+    <Compile Include="CommonFuncations\SendUSSD.cs" />
+    <Compile Include="CommonFuncations\ServiceBehavior.cs" />
+    <Compile Include="CommonFuncations\SHA1Enc.cs" />
+    <Compile Include="CommonFuncations\SHAEnc512.cs" />
+    <Compile Include="CommonFuncations\SharpVision.cs" />
+    <Compile Include="CommonFuncations\STS.cs" />
+    <Compile Include="CommonFuncations\Subscribe.cs" />
+    <Compile Include="CommonFuncations\uan_glo.cs" />
+    <Compile Include="CommonFuncations\UnSubscribe.cs" />
+    <Compile Include="CommonFuncations\USSD.cs" />
+    <Compile Include="CommonFuncations\USSDBtoBet.cs" />
+    <Compile Include="CommonFuncations\ValidateBankAccount.cs" />
+    <Compile Include="CommonFuncations\Vodacom.cs" />
+    <Compile Include="CommonFuncations\VodacomIMI.cs" />
+    <Compile Include="CommonFuncations\TrustVas.cs" />
+    <Compile Include="CommonFuncations\YDTracking.cs" />
+    <Compile Include="CommonFuncations\ZenDesk.cs" />
+    <Compile Include="CommonFuncations\ZoneAlarm.cs" />
+    <Compile Include="Controllers\BankCollectionInLineController.cs" />
+    <Compile Include="Controllers\BankTransferController.cs" />
+    <Compile Include="Controllers\BillController.cs" />
+    <Compile Include="Controllers\ChargeAirTimeController.cs" />
+    <Compile Include="Controllers\CheckUserStateController.cs" />
+    <Compile Include="Controllers\CreateVoucherController.cs" />
+    <Compile Include="Controllers\CreditCardController.cs" />
+    <Compile Include="Controllers\CRMController.cs" />
+    <Compile Include="Controllers\DeactivateUserController.cs" />
+    <Compile Include="Controllers\DYACheckAccountController.cs" />
+    <Compile Include="Controllers\DYACheckTransactionController.cs" />
+    <Compile Include="Controllers\DYAReceiveMoneyController.cs" />
+    <Compile Include="Controllers\DYATransferMoneyController.cs" />
+    <Compile Include="Controllers\EnrichmentController.cs" />
+    <Compile Include="Controllers\FulfillmentController.cs" />
+    <Compile Include="Controllers\FWInlineController.cs" />
+    <Compile Include="Controllers\GETCBByServiceController.cs" />
+    <Compile Include="Controllers\GetFlutterwaveBalancesController.cs" />
+    <Compile Include="Controllers\GetMSISDNController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\PayPagaController.cs" />
+    <Compile Include="Controllers\RefundAirTimeController.cs" />
+    <Compile Include="Controllers\SendSMSController.cs" />
+    <Compile Include="Controllers\GetSubUrlController.cs" />
+    <Compile Include="Controllers\SendUSSDController.cs" />
+    <Compile Include="Controllers\SubscribeController.cs" />
+    <Compile Include="Controllers\TrackAController.cs" />
+    <Compile Include="Controllers\UnSubscribeController.cs" />
+    <Compile Include="Controllers\USSDEmulatorController.cs" />
+    <Compile Include="Controllers\ValidateBankAccountController.cs" />
+    <Compile Include="DataLayer\DBQueries.cs" />
+    <Compile Include="DataLayer\DLValidateGetMSISDN.cs" />
+    <Compile Include="DataLayer\DLValidateLogin.cs" />
+    <Compile Include="DataLayer\DLValidateSMS.cs" />
+    <Compile Include="DataLayer\DLDYAValidateAccount.cs" />
+    <Compile Include="DEP\bigcash_ussd_opera.ashx.cs">
+      <DependentUpon>bigcash_ussd_opera.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DEP\bigcash_ussd2.ashx.cs">
+      <DependentUpon>bigcash_ussd2.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DEP\bigcash_ussd.ashx.cs">
+      <DependentUpon>bigcash_ussd.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DEP\bigcash.ashx.cs">
+      <DependentUpon>bigcash.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DEP\bigcash_weekly.ashx.cs">
+      <DependentUpon>bigcash_weekly.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DEP\gamewin.ashx.cs">
+      <DependentUpon>gamewin.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DEP\sports7.ashx.cs">
+      <DependentUpon>sports7.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DEP\Subscription.ashx.cs">
+      <DependentUpon>Subscription.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DEP\ydgames.ashx.cs">
+      <DependentUpon>ydgames.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DEP\ydtv.ashx.cs">
+      <DependentUpon>ydtv.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DJS\GetDynamicArguments.ashx.cs">
+      <DependentUpon>GetDynamicArguments.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="DJS\GetDynamicOptions.ashx.cs">
+      <DependentUpon>GetDynamicOptions.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="dlr\kannel_dlr.ashx.cs">
+      <DependentUpon>kannel_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ecw\debit_response.ashx.cs">
+      <DependentUpon>debit_response.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Flutterwave\flutter_handler.ashx.cs">
+      <DependentUpon>flutter_handler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ghana_mtn\sms_dlr.ashx.cs">
+      <DependentUpon>sms_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ghana_mtn\sub_callback.ashx.cs">
+      <DependentUpon>sub_callback.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\9mobile.ashx.cs">
+      <DependentUpon>9mobile.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\9mobileBill.ashx.cs">
+      <DependentUpon>9mobileBill.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\9mobileoptin.ashx.cs">
+      <DependentUpon>9mobileoptin.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\app_callback.ashx.cs">
+      <DependentUpon>app_callback.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\cc.ashx.cs">
+      <DependentUpon>cc.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\charge_notification.ashx.cs">
+      <DependentUpon>charge_notification.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\deactivate.ashx.cs">
+      <DependentUpon>deactivate.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ecw.ashx.cs">
+      <DependentUpon>ecw.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\getfeed.ashx.cs">
+      <DependentUpon>getfeed.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\get_balance.ashx.cs">
+      <DependentUpon>get_balance.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\greenbet_ussd.ashx.cs">
+      <DependentUpon>greenbet_ussd.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\iDoBetDoPayout.ashx.cs">
+      <DependentUpon>iDoBetDoPayout.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\imi_bigcash.ashx.cs">
+      <DependentUpon>imi_bigcash.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\imi_cr.ashx.cs">
+      <DependentUpon>imi_cr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\imi_not.ashx.cs">
+      <DependentUpon>imi_not.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\imi_playwin.ashx.cs">
+      <DependentUpon>imi_playwin.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\imi_ydgames.ashx.cs">
+      <DependentUpon>imi_ydgames.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ivr_sendsms.ashx.cs">
+      <DependentUpon>ivr_sendsms.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ivr_subscribe.ashx.cs">
+      <DependentUpon>ivr_subscribe.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\LP-Test.ashx.cs">
+      <DependentUpon>LP-Test.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\marketing_dlr.ashx.cs">
+      <DependentUpon>marketing_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\mo.ashx.cs">
+      <DependentUpon>mo.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\momo.ashx.cs">
+      <DependentUpon>momo.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\momo_congob.ashx.cs">
+      <DependentUpon>momo_congob.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\MTNOpenAPI.ashx.cs">
+      <DependentUpon>MTNOpenAPI.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\notify_2018.ashx.cs">
+      <DependentUpon>notify_2018.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\reg_interworks.ashx.cs">
+      <DependentUpon>reg_interworks.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\reload_services.ashx.cs">
+      <DependentUpon>reload_services.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\smsreceive.ashx.cs">
+      <DependentUpon>smsreceive.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\smsreceive_benin.ashx.cs">
+      <DependentUpon>smsreceive_benin.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\sms_dlr.ashx.cs">
+      <DependentUpon>sms_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\STS.ashx.cs">
+      <DependentUpon>STS.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\sub_callbacks.ashx.cs">
+      <DependentUpon>sub_callbacks.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\telekom_hn.ashx.cs">
+      <DependentUpon>telekom_hn.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\telekom_bigcash.ashx.cs">
+      <DependentUpon>telekom_bigcash.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\telekom_bigcash_ussd1.ashx.cs">
+      <DependentUpon>telekom_bigcash_ussd1.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\telekom_data_sync.ashx.cs">
+      <DependentUpon>telekom_data_sync.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\telekom_playwin.ashx.cs">
+      <DependentUpon>telekom_playwin.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\TestBtoBet.ashx.cs">
+      <DependentUpon>TestBtoBet.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\Tester.ashx.cs">
+      <DependentUpon>Tester.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\TestiDobetNewApi.ashx.cs">
+      <DependentUpon>TestiDobetNewApi.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\TestVodacom.ashx.cs">
+      <DependentUpon>TestVodacom.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\test_idobet.ashx.cs">
+      <DependentUpon>test_idobet.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\UpdateFSCashe.ashx.cs">
+      <DependentUpon>UpdateFSCashe.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\UpdateLeagueCache.ashx.cs">
+      <DependentUpon>UpdateLeagueCache.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mo.ashx.cs">
+      <DependentUpon>ussd_mo.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mo_benin.ashx.cs">
+      <DependentUpon>ussd_mo_benin.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mtnbenin.ashx.cs">
+      <DependentUpon>ussd_mtnbenin.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mtnbenin_706.ashx.cs">
+      <DependentUpon>ussd_mtnbenin_706.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mtnbenin_709.ashx.cs">
+      <DependentUpon>ussd_mtnbenin_709.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mtnbenin_760.ashx.cs">
+      <DependentUpon>ussd_mtnbenin_760.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mtnbenin_test.ashx.cs">
+      <DependentUpon>ussd_mtnbenin_test.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mtncameroon.ashx.cs">
+      <DependentUpon>ussd_mtncameroon.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mtncongo.ashx.cs">
+      <DependentUpon>ussd_mtncongo.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_mtnguinea.ashx.cs">
+      <DependentUpon>ussd_mtnguinea.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_orange_guinea.ashx.cs">
+      <DependentUpon>ussd_orange_guinea.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_orange_guinea_stg.ashx.cs">
+      <DependentUpon>ussd_orange_guinea_stg.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\ussd_wallet_mtncongo.ashx.cs">
+      <DependentUpon>ussd_wallet_mtncongo.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\video_pixel.ashx.cs">
+      <DependentUpon>video_pixel.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\vodacom_billing.ashx.cs">
+      <DependentUpon>vodacom_billing.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\vod_red.ashx.cs">
+      <DependentUpon>vod_red.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\vod_web.ashx.cs">
+      <DependentUpon>vod_web.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\wapnotify.ashx.cs">
+      <DependentUpon>wapnotify.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="handlers\who.ashx.cs">
+      <DependentUpon>who.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="HML\mo_sms.ashx.cs">
+      <DependentUpon>mo_sms.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="HttpItems\BankCollectionInLineRequest.cs" />
+    <Compile Include="HttpItems\BankCollectionInLineResponse.cs" />
+    <Compile Include="HttpItems\BankTransferRequest.cs" />
+    <Compile Include="HttpItems\BankTransferResponse.cs" />
+    <Compile Include="HttpItems\BillRequest.cs" />
+    <Compile Include="HttpItems\BillResponse.cs" />
+    <Compile Include="HttpItems\CBPerDay.cs" />
+    <Compile Include="HttpItems\ChargeAirTimeRequest.cs" />
+    <Compile Include="HttpItems\ChargeAirTimeResponse.cs" />
+    <Compile Include="HttpItems\CheckUserStateRequest.cs" />
+    <Compile Include="HttpItems\CheckUserStateResponse.cs" />
+    <Compile Include="HttpItems\CreateVoucherRequest.cs" />
+    <Compile Include="HttpItems\CreateVoucherResponse.cs" />
+    <Compile Include="HttpItems\DeactivateUserRequest.cs" />
+    <Compile Include="HttpItems\DeactivateUserResponse.cs" />
+    <Compile Include="HttpItems\DYACheckAccountRequest.cs" />
+    <Compile Include="HttpItems\DYACheckAccountResponse.cs" />
+    <Compile Include="HttpItems\DYACheckTransactionRequest.cs" />
+    <Compile Include="HttpItems\DYACheckTransactionResponse.cs" />
+    <Compile Include="HttpItems\DYAReceiveMoneyResponse.cs" />
+    <Compile Include="HttpItems\DYAReceiveMoneyRequest.cs" />
+    <Compile Include="HttpItems\DYATransferMoneyRequest.cs" />
+    <Compile Include="HttpItems\DYATransferMoneyResponse.cs" />
+    <Compile Include="HttpItems\FulfillmentRequest.cs" />
+    <Compile Include="HttpItems\FulfillmentResponse.cs" />
+    <Compile Include="HttpItems\GetBalanceRequest.cs" />
+    <Compile Include="HttpItems\GetBalanceResponse.cs" />
+    <Compile Include="HttpItems\GetMSISDNRequest.cs" />
+    <Compile Include="HttpItems\GetMSISDNResponse.cs" />
+    <Compile Include="HttpItems\GetSubUrlResponse.cs" />
+    <Compile Include="HttpItems\GetSubUrlRequest.cs" />
+    <Compile Include="HttpItems\LoginRequest.cs" />
+    <Compile Include="HttpItems\LoginResponse.cs" />
+    <Compile Include="HttpItems\RefundAirTimeRequest.cs" />
+    <Compile Include="HttpItems\RefundAirTimeResponse.cs" />
+    <Compile Include="HttpItems\SendSMSRequest.cs" />
+    <Compile Include="HttpItems\SendSMSResponse.cs" />
+    <Compile Include="HttpItems\SendUSSDPushRequest.cs" />
+    <Compile Include="HttpItems\SendUSSDPushResponse.cs" />
+    <Compile Include="HttpItems\UnsubscribeResponse.cs" />
+    <Compile Include="HttpItems\UnsubscribeRequest.cs" />
+    <Compile Include="HttpItems\SubscribeRequest.cs" />
+    <Compile Include="HttpItems\SubscribeResponse.cs" />
+    <Compile Include="HttpItems\ValidateBankAccountRequest.cs" />
+    <Compile Include="HttpItems\ValidateBankAccountResponse.cs" />
+    <Compile Include="idobet_cache\reload_cache.ashx.cs">
+      <DependentUpon>reload_cache.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="idobet_cache\reload_dusan_token.ashx.cs">
+      <DependentUpon>reload_dusan_token.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="idobet_cache\reload_tokens.ashx.cs">
+      <DependentUpon>reload_tokens.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="LNB\call_back.ashx.cs">
+      <DependentUpon>call_back.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="LN\airtime_winner.ashx.cs">
+      <DependentUpon>airtime_winner.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="LN\cash_winner.ashx.cs">
+      <DependentUpon>cash_winner.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Logger\LogzIOHelper.cs" />
+    <Compile Include="MADAPI\sms_dlr.ashx.cs">
+      <DependentUpon>sms_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="MADAPI\subscribe.ashx.cs">
+      <DependentUpon>subscribe.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="MADAPI\sub_callback.ashx.cs">
+      <DependentUpon>sub_callback.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="MADAPI\ussd_cameroon.ashx.cs">
+      <DependentUpon>ussd_cameroon.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="MADAPI\ussd_congo.ashx.cs">
+      <DependentUpon>ussd_congo.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="MADAPI\ussd_ic479.ashx.cs">
+      <DependentUpon>ussd_ic479.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="MADAPI\ussd_ic479_m.ashx.cs">
+      <DependentUpon>ussd_ic479_m.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="MADAPI\ussd_ng205.ashx.cs">
+      <DependentUpon>ussd_ng205.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\KHMPayments\KHMAuthentication.cs" />
+    <Compile Include="Models\SendCryptoMenuStructure.cs" />
+    <Compile Include="NG\sms_dlr.ashx.cs">
+      <DependentUpon>sms_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="NG\Subscription.ashx.cs">
+      <DependentUpon>Subscription.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Opera\Opera.cs" />
+    <Compile Include="Opera\PingMirror.aspx.cs">
+      <DependentUpon>PingMirror.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Opera\PingMirror.aspx.designer.cs">
+      <DependentUpon>PingMirror.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="orange\cancel.ashx.cs">
+      <DependentUpon>cancel.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange\handle_billing.ashx.cs">
+      <DependentUpon>handle_billing.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange\orange_guinea.ashx.cs">
+      <DependentUpon>orange_guinea.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange\orange_guinea_billing.ashx.cs">
+      <DependentUpon>orange_guinea_billing.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange\orange_guinea_billing_stg.ashx.cs">
+      <DependentUpon>orange_guinea_billing_stg.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange\ret_url.ashx.cs">
+      <DependentUpon>ret_url.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange\sms_dlr.ashx.cs">
+      <DependentUpon>sms_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange\webpayment_not.ashx.cs">
+      <DependentUpon>webpayment_not.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange_cm\sms_dlr.ashx.cs">
+      <DependentUpon>sms_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange_cm\Subscription.ashx.cs">
+      <DependentUpon>Subscription.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="orange_cm\u_games.ashx.cs">
+      <DependentUpon>u_games.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="PiSi\airtime_billing_cb.ashx.cs">
+      <DependentUpon>airtime_billing_cb.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="PiSi\mo_sms.ashx.cs">
+      <DependentUpon>mo_sms.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="PiSi\newpisi_subcallback.ashx.cs">
+      <DependentUpon>newpisi_subcallback.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="PiSi\newpisi_secured.ashx.cs">
+      <DependentUpon>newpisi_secured.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="PiSi\sms_dlr.ashx.cs">
+      <DependentUpon>sms_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="PiSi\sub_callback.ashx.cs">
+      <DependentUpon>sub_callback.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="PiSi\ussd_ng205.ashx.cs">
+      <DependentUpon>ussd_ng205.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sl\getwinners.ashx.cs">
+      <DependentUpon>getwinners.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="sl\notification.ashx.cs">
+      <DependentUpon>notification.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="SV\call_back.ashx.cs">
+      <DependentUpon>call_back.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="timwe\sms_dlr.ashx.cs">
+      <DependentUpon>sms_dlr.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="timwe\sub_callback.ashx.cs">
+      <DependentUpon>sub_callback.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="timwe\ATController.cs" />
+    <Compile Include="ussd\lnb_moov.ashx.cs">
+      <DependentUpon>lnb_moov.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ussd\mtn_benin.ashx.cs">
+      <DependentUpon>mtn_benin.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="zw\getwinners.ashx.cs">
+      <DependentUpon>getwinners.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="zw\notification.ashx.cs">
+      <DependentUpon>notification.ashx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="CampaignMNG\sub_not.js" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\customer-service.jpg" />
+    <Content Include="Content\opera\PingMirror.js" />
+    <Content Include="ErrorPage.html" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Opera\PingMirror.aspx" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Areas\HelpPage\Views\Web.config" />
+    <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\Index.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TextSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\SimpleTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Samples.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Parameters.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ModelDescriptionLink.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\KeyValuePairModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\InvalidSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ImageSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageApiModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\EnumTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\DictionaryModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ComplexTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="handlers\sms_dlr.ashx" />
+    <Content Include="handlers\sub_callbacks.ashx" />
+    <Content Include="handlers\who.ashx" />
+    <Content Include="handlers\mo.ashx" />
+    <Content Include="handlers\video_pixel.ashx" />
+    <Content Include="handlers\momo.ashx" />
+    <Content Include="handlers\ussd_mo.ashx" />
+    <Content Include="handlers\charge_notification.ashx" />
+    <Content Include="handlers\Tester.ashx" />
+    <Content Include="handlers\imi_ydgames.ashx" />
+    <Content Include="handlers\imi_cr.ashx" />
+    <Content Include="handlers\imi_bigcash.ashx" />
+    <Content Include="handlers\imi_not.ashx" />
+    <Content Include="handlers\imi_playwin.ashx" />
+    <Content Include="handlers\TestVodacom.ashx" />
+    <Content Include="handlers\vodacom_billing.ashx" />
+    <Content Include="handlers\9mobile.ashx" />
+    <Content Include="handlers\deactivate.ashx" />
+    <Content Include="handlers\9mobileoptin.ashx" />
+    <Content Include="handlers\9mobileBill.ashx" />
+    <Content Include="handlers\ivr_subscribe.ashx" />
+    <Content Include="handlers\ussd_mo_benin.ashx" />
+    <Content Include="handlers\reg_interworks.ashx" />
+    <Content Include="handlers\wapnotify.ashx" />
+    <Content Include="handlers\test_idobet.ashx" />
+    <Content Include="handlers\ussd_mtnbenin.ashx" />
+    <Content Include="handlers\iDoBetDoPayout.ashx" />
+    <Content Include="handlers\notify_2018.ashx" />
+    <Content Include="handlers\vod_red.ashx" />
+    <Content Include="handlers\marketing_dlr.ashx" />
+    <Content Include="handlers\ussd_mtnbenin_709.ashx" />
+    <Content Include="handlers\UpdateLeagueCache.ashx" />
+    <Content Include="handlers\ussd_mtnbenin_760.ashx" />
+    <Content Include="handlers\TestiDobetNewApi.ashx" />
+    <Content Include="handlers\ussd_mtnbenin_706.ashx" />
+    <Content Include="handlers\smsreceive_benin.ashx" />
+    <Content Include="handlers\telekom_data_sync.ashx" />
+    <Content Include="handlers\telekom_bigcash.ashx" />
+    <Content Include="handlers\telekom_playwin.ashx" />
+    <Content Include="handlers\greenbet_ussd.ashx" />
+    <Content Include="handlers\vod_web.ashx" />
+    <Content Include="handlers\ussd_mtncongo.ashx" />
+    <Content Include="handlers\TestBtoBet.ashx" />
+    <Content Include="handlers\ecw.ashx" />
+    <Content Include="handlers\ussd_mtnguinea.ashx" />
+    <Content Include="handlers\momo_congob.ashx" />
+    <Content Include="ecw\debit_response.ashx" />
+    <Content Include="handlers\getfeed.ashx" />
+    <Content Include="orange\orange_guinea.ashx" />
+    <Content Include="handlers\ussd_orange_guinea.ashx" />
+    <Content Include="handlers\MTNOpenAPI.ashx" />
+    <Content Include="handlers\ussd_mtncameroon.ashx" />
+    <Content Include="CampaignMNG\sub_notification.ashx" />
+    <Content Include="orange\sms_dlr.ashx" />
+    <Content Include="orange\orange_guinea_billing.ashx" />
+    <Content Include="handlers\ivr_sendsms.ashx" />
+    <Content Include="handlers\ussd_orange_guinea_stg.ashx" />
+    <Content Include="orange\orange_guinea_billing_stg.ashx" />
+    <Content Include="handlers\app_callback.ashx" />
+    <Content Include="handlers\reload_services.ashx" />
+    <Content Include="handlers\ussd_wallet_mtncongo.ashx" />
+    <Content Include="handlers\get_balance.ashx" />
+    <Content Include="DJS\GetDynamicArguments.ashx" />
+    <Content Include="DJS\GetDynamicOptions.ashx" />
+    <Content Include="handlers\cc.ashx" />
+    <Content Include="orange\webpayment_not.ashx" />
+    <Content Include="orange\cancel.ashx" />
+    <Content Include="orange\ret_url.ashx" />
+    <Content Include="handlers\UpdateFSCashe.ashx" />
+    <Content Include="handlers\STS.ashx" />
+    <Content Include="MADAPI\sub_callback.ashx" />
+    <Content Include="LN\cash_winner.ashx" />
+    <Content Include="MADAPI\sms_dlr.ashx" />
+    <Content Include="orange\handle_billing.ashx" />
+    <Content Include="handlers\ussd_mtnbenin_test.ashx" />
+    <Content Include="MADAPI\ussd_congo.ashx" />
+    <Content Include="Flutterwave\flutter_handler.ashx" />
+    <Content Include="orange_cm\sms_dlr.ashx" />
+    <Content Include="orange_cm\Subscription.ashx" />
+    <Content Include="DEP\Subscription.ashx" />
+    <Content Include="NG\sms_dlr.ashx" />
+    <Content Include="NG\Subscription.ashx" />
+    <Content Include="DEP\ydgames.ashx" />
+    <Content Include="DEP\ydtv.ashx" />
+    <Content Include="DEP\sports7.ashx" />
+    <Content Include="DEP\bigcash.ashx" />
+    <Content Include="DEP\gamewin.ashx" />
+    <Content Include="MADAPI\ussd_ng205.ashx" />
+    <Content Include="HML\mo_sms.ashx" />
+    <Content Include="MADAPI\subscribe.ashx" />
+    <Content Include="idobet_cache\reload_cache.ashx" />
+    <Content Include="idobet_cache\reload_dusan_token.ashx" />
+    <Content Include="idobet_cache\reload_tokens.ashx" />
+    <Content Include="CellC\sub_callback.ashx" />
+    <Content Include="CellC\ussd_callback.ashx" />
+    <Content Include="MADAPI\ussd_cameroon.ashx" />
+    <Content Include="MADAPI\ussd_ic479.ashx" />
+    <Content Include="MADAPI\ussd_ic479_m.ashx" />
+    <Content Include="DEP\bigcash_weekly.ashx" />
+    <Content Include="LNB\call_back.ashx" />
+    <Content Include="LN\airtime_winner.ashx" />
+    <Content Include="dlr\kannel_dlr.ashx" />
+    <Content Include="ghana_mtn\sms_dlr.ashx" />
+    <Content Include="ghana_mtn\sub_callback.ashx" />
+    <Content Include="orange_cm\u_games.ashx" />
+    <Content Include="AirTelCG\momo.ashx" />
+    <Content Include="handlers\LP-Test.ashx" />
+    <Content Include="handlers\smsreceive.ashx" />
+    <Content Include="PiSi\airtime_billing_cb.ashx" />
+    <Content Include="PiSi\mo_sms.ashx" />
+    <Content Include="PiSi\sms_dlr.ashx" />
+    <Content Include="PiSi\sub_callback.ashx" />
+    <Content Include="PiSi\ussd_ng205.ashx" />
+    <Content Include="PiSi\newpisi_secured.ashx" />
+    <Content Include="DEP\bigcash_ussd.ashx" />
+    <Content Include="AirTelCG\ussd.ashx" />
+    <Content Include="handlers\telekom_bigcash_ussd1.ashx" />
+    <Content Include="DEP\bigcash_ussd2.ashx" />
+    <Content Include="DEP\bigcash_ussd_opera.ashx" />
+    <Content Include="handlers\telekom_hn.ashx" />
+    <None Include="packages.config" />
+    <Content Include="PiSi\newpisi_subcallback.ashx" />
+    <None Include="Properties\PublishProfiles\OrenLocal.pubxml" />
+    <None Include="Properties\PublishProfiles\OrenPC.pubxml" />
+    <None Include="Properties\PublishProfiles\V48-175.pubxml" />
+    <None Include="Properties\PublishProfiles\V48.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Enrichment\Enrich.cshtml" />
+    <Content Include="Views\USSDEmulator\idoBetBenin.cshtml" />
+    <Content Include="Views\Shared\_USSD.cshtml" />
+    <Content Include="Views\USSDEmulator\test.cshtml" />
+    <Content Include="Views\USSDEmulator\ApproveMOMO.cshtml" />
+    <Content Include="Views\Shared\_USSD1.cshtml" />
+    <Content Include="Views\USSDEmulator\MoovBenin.cshtml" />
+    <Content Include="Views\Shared\_USSDMoov.cshtml" />
+    <Content Include="Views\USSDEmulator\MoovBenin_STG.cshtml" />
+    <Content Include="Views\CRM\Search.cshtml" />
+    <Content Include="Views\USSDEmulator\GreenWinBtoBet.cshtml" />
+    <Content Include="Views\USSDEmulator\MTNGuineaiDoBet.cshtml" />
+    <Content Include="ussd\mtn_benin.ashx" />
+    <Content Include="ussd\lnb_moov.ashx" />
+    <Content Include="Views\USSDEmulator\MTNLNBBenin.cshtml" />
+    <Content Include="Views\USSDEmulator\MoovLNBBenin.cshtml" />
+    <Content Include="Views\USSDEmulator\MTNCameroonBtoBet.cshtml" />
+    <Content Include="Views\USSDEmulator\CongoB_STG.cshtml" />
+    <Content Include="Views\USSDEmulator\MTNCongoB.cshtml" />
+    <Content Include="Views\CreditCard\LNB.cshtml" />
+    <Content Include="Views\CreditCard\LNBError.cshtml" />
+    <Content Include="Views\Enrichment\who.cshtml" />
+    <Content Include="Views\USSDEmulator\MTNCameroon.cshtml" />
+    <Content Include="zw\notification.ashx" />
+    <Content Include="zw\getwinners.ashx" />
+    <Content Include="sl\notification.ashx" />
+    <Content Include="sl\getwinners.ashx" />
+    <Content Include="Views\Enrichment\opera_ng.cshtml" />
+    <Content Include="Views\USSDEmulator\YDGamesBenin.cshtml" />
+    <Content Include="Views\Enrichment\TrackV.cshtml" />
+    <Content Include="Views\Enrichment\who1.cshtml" />
+    <Content Include="Views\FWInline\Check.cshtml" />
+    <Content Include="Views\Track\C.cshtml" />
+    <Content Include="Views\USSDEmulator\MTNIC479.cshtml" />
+    <Content Include="Views\USSDEmulator\MTNNGiDoBet.cshtml" />
+    <Content Include="timwe\sms_dlr.ashx" />
+    <Content Include="timwe\sub_callback.ashx" />
+    <Content Include="Views\USSDEmulator\MTNGuineai142.cshtml" />
+    <Content Include="Views\USSDEmulator\MTNCongoB142.cshtml" />
+    <Content Include="SV\call_back.ashx" />
+    <Content Include="Views\USSDEmulator\MTNLNBBeninV142.cshtml" />
+    <Content Include="Views\USSDEmulator\MoovLNBBeninV142.cshtml" />
+    <Content Include="Views\USSDEmulator\AirTelCongoB142.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="NewFolder2\" />
+    <Folder Include="Views\Bill\" />
+    <Folder Include="Views\DYAReceiveMoney\" />
+    <Folder Include="Views\DYATransferMoney\" />
+    <Folder Include="Views\Interswitch\" />
+    <Folder Include="Views\USSD\" />
+    <Folder Include="Views\V1\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Configuration_239|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>50596</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:50596/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.Toolset.4.11.0\build\Microsoft.Net.Compilers.Toolset.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.Toolset.4.11.0\build\Microsoft.Net.Compilers.Toolset.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

@@ -1,0 +1,59 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Check</title>
+</head>
+@{ 
+    if (ViewBag.Forbiden == true)
+    {
+        <body>
+            <h1>Forbiden</h1>
+        </body>
+    }
+    else
+    {
+        <body onload="makePayment()">
+
+            <script src="https://checkout.flutterwave.com/v3.js"></script>
+            <script>
+        function makePayment() {
+            FlutterwaveCheckout({
+                public_key: "@ViewBag.Key",
+                onclose: function (incomplete) {
+                    if (incomplete === true) {
+                        window.location.href = '@ViewBag.RedirectURL'
+                    }
+                },
+                tx_ref: "@ViewBag.RefID",
+                amount: @ViewBag.Amount,
+                currency: "NGN",
+                payment_options: "card, banktransfer, ussd",
+                redirect_url: "@ViewBag.RedirectURL",
+                meta: {
+                    service_name: "@ViewBag.ServiceName",
+                },
+                customer: {
+                    email: "@ViewBag.Email",
+                    phone_number: "@ViewBag.MSISDN",
+                    name: "@ViewBag.FullName",
+                },
+                customizations: {
+                    title: "@ViewBag.ServiceName",
+                    description: "@ViewBag.ServiceName",
+                    logo: "@ViewBag.LogoURL",
+                },
+            });
+        }
+            </script>
+        </body>
+    }
+}
+
+</html>

@@ -1,0 +1,86 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_USSD.cshtml";
+}
+
+<script>
+
+</script>
+<h2 style="color:white;" align="center">MTN Cameroon USSD Emulator</h2>
+<form method="post" action="/USSDEmulator/MTNCameroon/@ViewBag.SessionID">
+    <table>
+        <tr>
+            <td width="33%" style="vertical-align:top;color:white;">
+                <br><br><br>
+                <input type="button" value="Start New Session" onclick="StartSessioniDoBetMTNCameroon('@ViewBag.NewSessionID')"><br>
+                <table style="color:white;">
+                    <tr>
+                        <td>Session will expire in:</td>
+                        <td id="timer"></td>
+                    </tr>
+                    <tr>
+                        <td>Width:</td>
+                        <td><input type="text" id="WIT" name="width_p" value="@ViewBag.width_p"></td>
+                    </tr>
+                    <tr>
+                        <td>Height:</td>
+                        <td><input type="text" id="HIT" name="height_p" value="@ViewBag.height_p"></td>
+                    </tr>
+                    <tr>
+                        <td>MSISDN:</td>
+                        <td><input type="text" id="MIT" name="MSISDN" value="@ViewBag.MSISDN"></td>
+                    </tr>
+                </table>
+
+            </td>
+
+            <td style="vertical-align:top;">
+
+                <div class="phone" style="width:@ViewBag.widthpx;height:@ViewBag.heightpx;background-color:white">
+                    @{
+                        if (ViewBag.Menu2Display != "")
+                        {
+                            //
+
+                            <table align="center" cellpadding="@ViewBag.cellpadding" style="margin-top:@ViewBag.margin_top;border: 1px solid black;border-radius:40px;table-layout:fixed;width:@ViewBag.table_width;height:40%;">
+                                <tr>
+                                    <td style="padding-left:20px;padding-top:10px;padding-bottom:10px;word-wrap: break-word;font-size:12px;font-family:Arial;font-weight:bold;">
+                                        @Html.Raw(ViewBag.Menu2Display)
+                                        <br />
+                                        @if (ViewBag.IsClose == false)
+                                        {
+                                            <input size="15" type="text" name="ussdString" style="border:none;border-bottom:2px black solid;" autofocus><br>
+                                            <input type="button" value="Cancel" class="button button1" onclick="StartSessioniDoBetMTNCameroon('@ViewBag.NewSessionID')" /> <input type="submit" value="Send" class="button button1" />
+                                        }
+                                        else
+                                        {
+                                            <input type="button" value="OK" class="button button1" onclick="StartSessioniDoBetMTNCameroon('@ViewBag.NewSessionID')" />
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        }
+                    }
+                </div>
+            </td>
+
+            <td width="33%" style="vertical-align:top;color:white;">
+                <br><br><br>
+                <pre>
+                @{
+                    if(ViewBag.Lines != null)
+                    {
+                        foreach (Api.Logger.Logger.LogLines line in ViewBag.Lines)
+                        {
+                <pre>@line.CurrentTime : @line.Data</pre>
+                        }
+                    }
+                }
+                </pre>
+
+            </td>
+        </tr>
+    </table>
+</form>
+
+
