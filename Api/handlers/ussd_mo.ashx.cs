@@ -70,7 +70,7 @@ namespace Api.handlers
                                 case 697:
                                     menu = menu + "à 100F/03J est actif. Validité: ";
                                     day_2_add = 2;
-                                    
+
                                     validate_date = Convert.ToDateTime(res1.SubscriptionDate).AddDays(day_2_add).ToString("dd/MM/yyyy") + " 23:59";
                                     exp_time = Convert.ToDateTime(res1.SubscriptionDate).AddDays(day_2_add).ToString("yyyy-MM-dd") + " 23:59:59";
                                     if (DateTime.Now < Convert.ToDateTime(exp_time))
@@ -99,8 +99,8 @@ namespace Api.handlers
                                     menu = menu + validate_date + Environment.NewLine + "0) Retour ";
                                     break;
                             }
-                            
-                            
+
+
                         }
                     }
 
@@ -112,7 +112,7 @@ namespace Api.handlers
                 {
                     menu = "Cher abonné, vous n'avez pas souscrit au service Yellow Games" + Environment.NewLine + "0) Retour ";
                 }
-                
+
             }
             return menu;
         }
@@ -254,7 +254,7 @@ namespace Api.handlers
                             string sms_text = "Cher abonné, votre souscription au service MTN Yello Games [TYPE] a bien été désactivé. Activer un nouveau en Tapant *709*1#.";
 
                             Api.DataLayer.DBQueries.ExecuteQuery("update subscribers set state_id = 2, deactivation_date = now() where subscriber_id = " + res1.SubscriberID, ref lines);
-                            
+
                             //if (subscribe_response != null)
                             //{
                             //    lines = Add2Log(lines, " ResultCode = " + subscribe_response.ResultCode + ", Description = " + subscribe_response.Description, 100, "ivr_subscribe");
@@ -366,17 +366,29 @@ namespace Api.handlers
                 case 938:
                 case 939:
                     menu = "Demande dabonnement prise en compte, vous recevrez un SMS de confirmation sous peu.";
-                    if (result_code == 1050)        menu = "Echec, veuillez reessayer plus tard";       // an error has occured
-                    else if (result_code == 3010)   menu = "Déjà abonné à ce service.";                 // already subscribed
+                    if (result_code == 1050) menu = "Echec, veuillez reessayer plus tard";       // an error has occured
+                    else if (result_code == 3010) menu = "Déjà abonné à ce service.";                 // already subscribed
                     break;
 
                 case 1184:
                 case 1185:
                 case 1186:
-                    // orange ivory coast
-                    double jackpot = 250 * Math.Pow(2, service_id - 1184);
-                    if (result_code == 1000)        menu = $"Bienvenu sur Numero d'OR. Vous etes sur le point de gagner (pack jackpot) eg: {jackpot.ToString("N0", new System.Globalization.CultureInfo("fr-FR"))}.000FCFA au prochain tirage de numero d'Or.Suivez le lien http://icorgtwn.ydot.co Bonne chance!";
-                    else if (result_code == 3010)   menu = "Déjà abonné à ce service.";                 // already subscribed
+                case 1187:
+                case 1188:
+                case 1189:
+                    // orange ivory coast - lucky number
+                    // 1184 to 1186 = airtime subscription
+                    // 1187 to 1189 = airtime once off
+
+                    // -- jackpot is 250k, 500k or 1000k
+                    double jackpot = 250 * Math.Pow(2, (service_id - 1184) % 3);
+
+                    // string jackpot_amount = jackpot.ToString("N0", new System.Globalization.CultureInfo("fr-FR"));
+                    // something wrong with the Globalisation -- includes strange characters which up set the ussd
+                    string jackpot_amount = jackpot.ToString("N0").Replace(",", ".");
+
+                    if (result_code == 1000) menu = $"Bienvenu sur Numero d'OR. Vous etes sur le point de gagner {jackpot_amount}.000FCFA au prochain tirage de numero d'Or.Suivez le lien http://icorgtwn.ydot.co Bonne chance!";
+                    else if (result_code == 3010) menu = "Déjà abonné à ce service.";                 // already subscribed
                     else menu = "Echec, veuillez reessayer plus tard.";
                     break;
             }
@@ -400,7 +412,7 @@ namespace Api.handlers
             {
                 menu_2_display = ussd_menu.menu_2_display;
                 result = USSD.BuildSendUSSDSoap(service, ServiceID, MSISDN, linkid, receiveCB, senderCB, serviceCode, ussd_menu.menu_2_display, "1", "1");
-                DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ",0, '" + ussdString + "', " + ussd_menu.action_id + ", " + (ussd_session == null ? 0 : ussd_session.page_number) + "," + (ussd_session == null ? 0 : ussd_session.odd_page) + "," + (ussd_session == null ? 0 : ussd_session.game_id) + "," + topic_id + ",'"+ user_session_id + "');", "DBConnectionString_104", ref lines);
+                DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ",0, '" + ussdString + "', " + ussd_menu.action_id + ", " + (ussd_session == null ? 0 : ussd_session.page_number) + "," + (ussd_session == null ? 0 : ussd_session.odd_page) + "," + (ussd_session == null ? 0 : ussd_session.game_id) + "," + topic_id + ",'" + user_session_id + "');", "DBConnectionString_104", ref lines);
             }
             if (ussd_menu.action_id == 3) //close
             {
@@ -420,7 +432,7 @@ namespace Api.handlers
             {
                 menu_2_display = UnsubscribeMultiServiceMenu(service.service_id, MSISDN, ref lines);
                 result = USSD.BuildSendUSSDSoap(service, ServiceID, MSISDN, linkid, receiveCB, senderCB, serviceCode, menu_2_display, "1", "1");
-                DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ",0, '" + ussdString + "', " + ussd_menu.action_id + ", " + (ussd_session == null ? 0 : ussd_session.page_number) + "," + (ussd_session == null ? 0 : ussd_session.odd_page) + "," + (ussd_session == null ? 0 : ussd_session.game_id) + "," + topic_id + ",'" + user_session_id + "');", "DBConnectionString_104",  ref lines);
+                DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ",0, '" + ussdString + "', " + ussd_menu.action_id + ", " + (ussd_session == null ? 0 : ussd_session.page_number) + "," + (ussd_session == null ? 0 : ussd_session.odd_page) + "," + (ussd_session == null ? 0 : ussd_session.game_id) + "," + topic_id + ",'" + user_session_id + "');", "DBConnectionString_104", ref lines);
 
             }
             if (ussd_menu.action_id == 62) //DeactivateMultiServiceFull
@@ -481,7 +493,7 @@ namespace Api.handlers
                         menu_2_display = SubscribeMultiServiceMenu(subscriber_service.service_id, 1050, ref lines);
                         full_res = Fulfillment.CallFulfillment(subscriber_service, MSISDN, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), false, ref lines, out errmsg);
                     }
-                    
+
 
                     DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ",1, '" + ussdString + "', " + ussd_menu.action_id + ", " + (ussd_session == null ? 0 : ussd_session.page_number) + "," + (ussd_session == null ? 0 : ussd_session.odd_page) + "," + (ussd_session == null ? 0 : ussd_session.game_id) + "," + topic_id + ",'" + user_session_id + "');", "DBConnectionString_104", ref lines);
 
@@ -550,7 +562,7 @@ namespace Api.handlers
                 LoginResponse res = Login.DoLogin(LoginRequestBody);
 
                 menu_2_display = "Thank You";
-                
+
                 is_close = true;
                 //result = USSD.BuildSendUSSDSoap(service, ServiceID, MSISDN, linkid, receiveCB, senderCB, serviceCode, "Thank You", "2", "2");
                 //lines = Add2Log(lines, "Soap = " + result, 100, "ussd_mo");
@@ -586,7 +598,7 @@ namespace Api.handlers
                 DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ",1, '" + ussdString + "', " + ussd_menu.action_id + ", " + (ussd_session == null ? 0 : ussd_session.page_number) + "," + (ussd_session == null ? 0 : ussd_session.odd_page) + "," + (ussd_session == null ? 0 : ussd_session.game_id) + "," + topic_id + ",'" + user_session_id + "');", "DBConnectionString_104", ref lines);
             }
 
-            
+
             if (String.IsNullOrEmpty(result))
             {
                 switch (topic_id)
@@ -604,15 +616,15 @@ namespace Api.handlers
                         string selected_odd_line = (ussd_session != null ? ussd_session.selected_odd_line : "null");
                         string amount = (ussd_session != null ? ussd_session.amount : "0");
                         int selected_league_id = (ussd_session != null ? ussd_session.selected_league_id : 0);
-                        
-                        
+
+
                         string amount_2_pay = (ussd_session != null ? ussd_session.amount_2_pay.ToString() : "0");
                         string bar_code = (ussd_session != null ? ussd_session.bar_code : "0");
                         string selected_subagent_name = (ussd_session != null ? ussd_session.selected_subagent_name : "0");
                         IdoBetUser user = new IdoBetUser();
                         switch (ussd_menu.action_id)
                         {
-                            
+
                             case 55://EnterAmountForSubAgent
                                 msgType = "2";
                                 opType = "2";
@@ -646,9 +658,9 @@ namespace Api.handlers
                                         }
                                     }
                                 }
-                                
-                                
-                                
+
+
+
                                 break;
                             case 54:
                                 page_number = (page_number == 0 ? 1 : page_number);
@@ -731,7 +743,7 @@ namespace Api.handlers
                                                     {
                                                         code = StartWithdrawNew(user, MSISDN, Convert.ToDouble(ussdString), out postBody, out response_body, ref lines);
                                                     }
-                                                        
+
 
 
                                                     menu_2_display = GetStartWithdrawMoneyMenu(user, true, true, false, ref lines);
@@ -750,7 +762,7 @@ namespace Api.handlers
                                                             string email_host = Api.Cache.ServerSettings.GetServerSettings("iDoBetEmailHost", ref lines);
                                                             CommonFuncations.Email.SendEmail(mail_body, mail_subject, emails, sender_email, sender_name, sender_assword, email_port, email_host, ref lines);
                                                         }
-                                                        
+
                                                     }
                                                     else
                                                     {
@@ -760,7 +772,7 @@ namespace Api.handlers
                                                             postBody = "";
                                                             response_body = "";
                                                             bool end_withdraw = EndWithdrawNew(momotransfer_response.Timestamp, momotransfer_response.TransactionID, true, code, user, MSISDN, Convert.ToDouble(ussdString), out postBody, out response_body, ref lines);
-                                                            if(!end_withdraw)
+                                                            if (!end_withdraw)
                                                             {
                                                                 string mail_body = "", mail_subject = "";
                                                                 mail_body = "<p><h2>End Withdraw has failed but DYATransfer was ok</h2><b>UserID:</b> " + user.id + "<br><b>Name:</b> " + user.firstName + " " + user.lastName + "<br><b>Amount: </b>" + ussdString + "<br><b>MSISDN: </b>" + MSISDN + "<br><b>Request: </b>" + postBody + "<br>Response: " + response_body + "<br></p>";
@@ -777,12 +789,12 @@ namespace Api.handlers
                                                         }
                                                         else
                                                         {
-                                                            
+
                                                             postBody = "";
                                                             response_body = "";
                                                             bool end_withdraw = EndWithdrawNew(momotransfer_response.Timestamp, momotransfer_response.TransactionID, false, code, user, MSISDN, Convert.ToDouble(ussdString), out postBody, out response_body, ref lines);
                                                             string mail_body = "", mail_subject = "";
-                                                            mail_body = "<p><h2>Withdraw has failed DYATransfer</h2><b>UserID:</b> " + user.id + "<br><b>Name:</b> " + user.firstName + " " + user.lastName + "<br><b>Amount: </b>" + ussdString + "<br><b>MSISDN: </b>" + MSISDN + "<br><b>MOMO Response: </b>" + momotransfer_response.ResultCode + " " + momotransfer_response.Description + "<br>User was refunded: " + end_withdraw + "<br><b>Request: </b>"+postBody+"<br><b>Response: </b>"+response_body+"</p>";
+                                                            mail_body = "<p><h2>Withdraw has failed DYATransfer</h2><b>UserID:</b> " + user.id + "<br><b>Name:</b> " + user.firstName + " " + user.lastName + "<br><b>Amount: </b>" + ussdString + "<br><b>MSISDN: </b>" + MSISDN + "<br><b>MOMO Response: </b>" + momotransfer_response.ResultCode + " " + momotransfer_response.Description + "<br>User was refunded: " + end_withdraw + "<br><b>Request: </b>" + postBody + "<br><b>Response: </b>" + response_body + "</p>";
                                                             mail_subject = "Withdraw has failed DYATransfer for user - " + user.id;
                                                             string emails = Api.Cache.ServerSettings.GetServerSettings("iDoBetEmailRecipients", ref lines);
                                                             string sender_email = Api.Cache.ServerSettings.GetServerSettings("iDoBetSenderEmail", ref lines);
@@ -799,8 +811,8 @@ namespace Api.handlers
                                                 }
                                             }
                                         }
-                                        
-                                        
+
+
                                     }
                                     else
                                     {
@@ -828,7 +840,7 @@ namespace Api.handlers
                                 //RequestForOrder
                                 //bool req_for_order = GetRequestForOrder(ussd_session, ref lines);
                                 bool req_for_order = PlaceBet(ussd_session, ref lines);
-                                
+
                                 if (req_for_order == true)
                                 {
                                     menu_2_display = GetCloseBet(ussd_session, amount, ref lines);
@@ -860,7 +872,7 @@ namespace Api.handlers
                                 {
                                     menu_2_display = GetCloseBetFailed(ref lines);
                                 }
-                                 break;
+                                break;
                             case 22: //ConfirmBetXXX
                             case 23:
                             case 24:
@@ -875,13 +887,13 @@ namespace Api.handlers
                                     }
                                     else
                                     {
-                                        
+
                                         menu_2_display = GetWrongPriceBetMeny(ref lines);
                                         DataLayer.DBQueries.ExecuteQuery("delete from ussd_saved_games where user_session_id = '" + user_session_id + "' order by id desc limit 1", ref lines);
                                     }
                                 }
                                 odd_page = 0;
-                                
+
                                 break;
                             case 19: //PayAndConfirmXXX
                             case 20:
@@ -942,14 +954,14 @@ namespace Api.handlers
                                                 int cashier_id = GetCashierID(MSISDN, ref lines);
                                                 if (cashier_id > 0)
                                                 {
-                                                    DataLayer.DBQueries.ExecuteQuery("insert into casheir_transactions (cashier_id, bar_code, total_payout, date_time, dya_id) values("+cashier_id+", '"+bar_code+"', "+amount_2_pay+", now(),"+ momotransfer_response.TransactionID +");", ref lines);
+                                                    DataLayer.DBQueries.ExecuteQuery("insert into casheir_transactions (cashier_id, bar_code, total_payout, date_time, dya_id) values(" + cashier_id + ", '" + bar_code + "', " + amount_2_pay + ", now()," + momotransfer_response.TransactionID + ");", ref lines);
                                                 }
                                                 GoogleAnalytics.SendData2GoogleAnalytics("UA-135957841-1", "ussd", Base64.Reverse(MSISDN), System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"], "BJ", "event", "PyoutPOSTicket", "MOMO", "-" + ussdString, "/", ref lines);
                                                 //dopayout
                                                 bool dopayout_res = iDoBet.DoPayOutNew(momotransfer_response.Timestamp, momotransfer_response.TransactionID, bar_code, ref lines);
                                                 //bool dopayout_res = iDoBet.DoPayout(bar_code, ref lines);
                                                 menu_2_display = "Félicitations, le billet a été remboursé sur votre compte MOMO.";
-                                                    
+
                                             }
                                             else
                                             {
@@ -973,7 +985,7 @@ namespace Api.handlers
                                         }
                                     }
                                 }
-                                
+
                                 break;
                             case 44: //search ticket
                                 menu_2_display = iDoBet.GetCheckTicketByBarcodeMenu(MSISDN, ussdString, out amount_2_pay, ref lines);
@@ -1015,7 +1027,7 @@ namespace Api.handlers
                                 menu_2_display = GetSoccerLeagueMenu(32, "0", ussd_menu.ussd_id, ref lines, out selected_league_id);
                                 break;
                             case 37: //display soccer leagu
-                                menu_2_display = GetSoccerLeagueMenu(31, "0",ussd_menu.ussd_id, ref lines, out selected_league_id);
+                                menu_2_display = GetSoccerLeagueMenu(31, "0", ussd_menu.ussd_id, ref lines, out selected_league_id);
                                 break;
                             case 49:
                             case 50:
@@ -1065,7 +1077,7 @@ namespace Api.handlers
                                         page_number = 1;
                                         odd_page = 0;
                                     }
-                                    
+
                                 }
                                 switch (ussd_menu.action_id)
                                 {
@@ -1106,7 +1118,7 @@ namespace Api.handlers
                                 {
                                     odd_page = odd_page + 1;
                                 }
-                                if (ussdString.Contains("*") && odd_page >0)
+                                if (ussdString.Contains("*") && odd_page > 0)
                                 {
                                     odd_page = odd_page - 1;
                                 }
@@ -1147,7 +1159,7 @@ namespace Api.handlers
                         lines = Add2Log(lines, " amount = " + amount, 100, "ivr_subscribe");
                         lines = Add2Log(lines, " selected_league_id = " + selected_league_id, 100, "ivr_subscribe");
                         result = USSD.BuildSendUSSDSoap(service, ServiceID, MSISDN, linkid, receiveCB, senderCB, serviceCode, menu_2_display, msgType, opType);
-                        DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id, selected_odd, selected_bet_type_id,selected_odd_name, selected_odd_line, amount, selected_league_id, amount_2_pay, bar_code, selected_subagent_name) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ","+ status + ", '" + ussdString + "', " + ussd_menu.action_id + ", " + page_number + "," + odd_page + "," + game_id + "," + topic_id + ",'" + user_session_id + "',"+selected_odd+","+selected_bet_type_id+",'"+selected_odd_name+"','"+selected_odd_line+"', "+amount+","+selected_league_id+","+amount_2_pay+",'"+bar_code+"','"+ selected_subagent_name + "');", "DBConnectionString_104", ref lines);
+                        DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id, selected_odd, selected_bet_type_id,selected_odd_name, selected_odd_line, amount, selected_league_id, amount_2_pay, bar_code, selected_subagent_name) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + "," + status + ", '" + ussdString + "', " + ussd_menu.action_id + ", " + page_number + "," + odd_page + "," + game_id + "," + topic_id + ",'" + user_session_id + "'," + selected_odd + "," + selected_bet_type_id + ",'" + selected_odd_name + "','" + selected_odd_line + "', " + amount + "," + selected_league_id + "," + amount_2_pay + ",'" + bar_code + "','" + selected_subagent_name + "');", "DBConnectionString_104", ref lines);
                         break;
                 }
             }
@@ -1220,7 +1232,7 @@ namespace Api.handlers
                 lines = Add2Log(lines, " abortReason = " + abortReason, 100, "ussd_mo");
 
                 service = GetServiceInfo(spID, ServiceID, "", ref lines);
-               
+
 
                 if (!String.IsNullOrEmpty(ussdString) && !String.IsNullOrEmpty(cu_id) && !String.IsNullOrEmpty(MSISDN))
                 {
@@ -1264,9 +1276,9 @@ namespace Api.handlers
                         USSDMainCode umc = GetUSSDMainCodeID(spID, serviceCode, ref lines);
                         if (umc != null)
                         {
-                            lines = Add2Log(lines, " USSD Main Code ID = " +umc.ussd_id, 100, "ivr_subscribe");
+                            lines = Add2Log(lines, " USSD Main Code ID = " + umc.ussd_id, 100, "ivr_subscribe");
                             USSDSession ussd_session = DataLayer.DBQueries.GetLastUSSDSession(MSISDN, umc.ussd_id, ref lines);
-                            
+
                             int action_id = (ussd_session == null ? 0 : ussd_session.action_id);
                             USSDMenu ussd_menu = GetUSSDMenu(umc.ussd_id, ussdString, action_id, ussd_session, ref lines);
                             if (ussd_menu != null)
@@ -1283,7 +1295,7 @@ namespace Api.handlers
                             //Int64 game_id = 0;
                             //int last_menu_id = DataLayer.DBQueries.GetLastUSSDMenu(MSISDN, umc.ussd_id, ref lines, out page_number, out odd_page, out game_id);
                             //lines = Add2Log(lines, " Last menu id = " + last_menu_id, 100, "ivr_subscribe");
-                           
+
                         }
 
 
@@ -1291,11 +1303,11 @@ namespace Api.handlers
 
                     }
                 }
-                
+
 
             }
 
-            
+
             string response_soap = "";
             response_soap = response_soap + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:loc=\"http://www.csapi.org/schema/parlayx/ussd/notification/v1_0/local\">";
             response_soap = response_soap + "<soapenv:Header/>";

@@ -269,7 +269,8 @@ namespace Api.CommonFuncations
                                     {
                                         // send a notice users
                                         Orange.SendSMSKannel(RequestBody.MSISDN.ToString()
-                                            , $"Bienvenue à Num d'OR ! Vous serez automatiquement débité(e) de {myservice.subscription_amount} F chaque jour pour participer au tirage. * Pour en savoir plus, visitez http://icorgtwn.ydot.co, composez 590#5, ou envoyez HELP par SMS au 7717."
+                                            //, $"Bienvenue à Num d'OR ! Vous serez automatiquement débité(e) de {myservice.subscription_amount} F chaque jour pour participer au tirage. * Pour en savoir plus, visitez http://icorgtwn.ydot.co, composez 590#5, ou envoyez HELP par SMS au 7717."
+                                            ,$"Bienvenue sur le service Numéro d'OR !Vous êtes désormais inscrit sur le pack à {myservice.subscription_amount} F, et vous avez la chance de gagner jusqu'à 250 000 F si les 10 chiffres de votre numéro sont tirés. Le tirage au sort a lieu chaque jour  avant 12h et est consultable au *590*5#.Bonne chance et à très bientôt ! Vous pouvez stopper l'abonnement à tout moment en composant le *590*6#"
                                             , false
                                             , "subscribe_" + service_id + "_" + DateTime.Now.ToString("yyyyMMddHHmmss")
                                             , service_id

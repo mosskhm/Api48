@@ -35,7 +35,7 @@ namespace Api.MADAPI
                 lines = Add2Log(lines, "!! BuildMenu: menu2display is blank", 100, "");
                 menu = "{"
                      + "\"page\":{"
-                     + "\"session_end\":\"true\""
+                     + "\"session_end\":\"true\""   
                      + "},"
                      + "\"message\":\"an error has occurred\""
                      + "}"
@@ -233,6 +233,7 @@ namespace Api.MADAPI
                         
                         string response_soap = BuildMMenu(MSISDN, menu_2_display, is_close, action_id, ussd_session, ussd_menu, ref lines);
                         context.Response.Write(response_soap);
+                        lines = Add2Log(lines, "response = " + response_soap, 100, "");
 
                         // log response
                         var jsonDoc = JsonDocument.Parse(response_soap);

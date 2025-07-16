@@ -2,8 +2,6 @@
 using Api.DataLayer;
 using Api.HttpItems;
 using Api.Logger;
-using Api.MADAPI;
-using Microsoft.Web.Services2.Addressing;
 using Mysqlx.Crud;
 using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
@@ -29,7 +27,6 @@ namespace Api.CommonFuncations
 {
     public class Orange
     {
-        // Gets OAuth bearer tokens for API access
         public static string GetBearerToken(ServiceClass service, ref List<LogLines> lines)
         {
             string bearer = "";
@@ -58,7 +55,6 @@ namespace Api.CommonFuncations
             return bearer;
         }
 
-        // Gets service-specific tokens for Orange Money operations
         public static string GetOMRServiceToken(ServiceClass service, OrangeServiceInfo orange_service, ref List<LogLines> lines)
         {
             string token = "";
@@ -90,7 +86,6 @@ namespace Api.CommonFuncations
             public string version { get; set; }
         }
 
-        // Gets form tokens for cash-in/cash-out operations
         public static OMRFormsToken GetOMRFormsToken(ServiceClass service, OrangeServiceInfo orange_service, string xomrservice_token, ref List<LogLines> lines)
         {
             OMRFormsToken token = null;
@@ -153,7 +148,6 @@ namespace Api.CommonFuncations
 
 
 
-        //  Creates web payment URLs for online transactions
         public static DYAReceiveMoneyResponse GetWebPayURL(DYAReceiveMoneyRequest RequestBody, string dya_id, ServiceClass service, string datetime, ref List<LogLines> lines)
         {
             DYAReceiveMoneyResponse ret = new DYAReceiveMoneyResponse()
@@ -218,7 +212,6 @@ namespace Api.CommonFuncations
             return ret;
         }
 
-        // Sends money to a phone number via Orange Money
         public static DYATransferMoneyResponse TransferMoney(DYATransferMoneyRequest RequestBody, string dya_id, ServiceClass service, string datetime, ref List<LogLines> lines, ref List<object> logMessages, string app_name, string logz_id)
         {
             DYATransferMoneyResponse ret = new DYATransferMoneyResponse()
@@ -342,7 +335,6 @@ namespace Api.CommonFuncations
             return ret;
         }
 
-        //  Receives money from a phone number
         public static DYAReceiveMoneyResponse ReceiveMoney(DYAReceiveMoneyRequest RequestBody, string dya_id, ServiceClass service, string datetime, ref List<LogLines> lines, ref List<object> logMessages, string app_name, string logz_id)
         {
             DYAReceiveMoneyResponse ret = new DYAReceiveMoneyResponse()
@@ -436,7 +428,6 @@ namespace Api.CommonFuncations
             public string expires { get; set; }
         }
 
-        // Checks SMS balance and contract status
         public static List<SMSMonitoring> GetSMSMonitoring(ServiceClass service, ref List<LogLines> lines)
         {
 
@@ -531,7 +522,7 @@ namespace Api.CommonFuncations
             return result;
         }
 
-        // Checks the status of a money transfer transaction
+
         public static DYACheckTransactionResponse CheckTranaction(DYACheckTransactionRequest RequestBody, ServiceClass service, ref List<LogLines> lines)
         {
             DYACheckTransactionResponse ret = new DYACheckTransactionResponse()
@@ -619,7 +610,6 @@ namespace Api.CommonFuncations
             return ret;
         }
 
-        // Sends SMS via Orange's SMS API
         public static bool SendSMS(SendSMSRequest RequestBody, ServiceClass service, ref List<LogLines> lines)
         {
             bool result = false;
@@ -665,7 +655,6 @@ namespace Api.CommonFuncations
         }
 
 
-        //  Cameroon-specific SMS sending
         public static bool SendSMSCM(SendSMSRequest RequestBody, ServiceClass service, ref List<LogLines> lines)
         {
             bool result = false;
@@ -706,7 +695,6 @@ namespace Api.CommonFuncations
             return result;
         }
 
-        //  Value-added service SMS for Cameroon
         public static bool SendSMSCMVAS(SendSMSRequest RequestBody, ServiceClass service, ref List<LogLines> lines)
         {
             bool result = false;
@@ -751,7 +739,6 @@ namespace Api.CommonFuncations
             return result;
         }
 
-        // Subscribes users to services
         public static SubscribeResponse Subscribe(SubscribeRequest RequestBody, ServiceClass service, ref List<LogLines> lines)
         {
             SubscribeResponse ret = new SubscribeResponse()
@@ -825,8 +812,6 @@ namespace Api.CommonFuncations
             return ret;
         }
 
-
-        // Unsubscribes users from services
         public static SubscribeResponse UnSubscribe(SubscribeRequest RequestBody, ServiceClass service, DLValidateSMS result, ref List<LogLines> lines)
         {
             SubscribeResponse ret = new SubscribeResponse()
@@ -864,8 +849,6 @@ namespace Api.CommonFuncations
             return ret;
         }
 
-
-        //  Bills users for services via Orange's payment API
         public static BillResponse Bill(BillRequest RequestBody, ServiceClass service, DLValidateBill result, ref List<LogLines> lines)
         {
             BillResponse ret = new BillResponse()
@@ -966,7 +949,6 @@ namespace Api.CommonFuncations
             return ret;
         }
 
-        // Validates user accounts
         public static DYACheckAccountResponse CheckAccount(DYACheckAccountRequest RequestBody, ServiceClass service, ref List<LogLines> lines)
         {
             DYACheckAccountResponse ret = new DYACheckAccountResponse()
@@ -978,12 +960,11 @@ namespace Api.CommonFuncations
         }
 
 
-        // Sends SMS via Kannel gateway (different infrastructure)
         public static bool SendSMSKannel(string msisdn, string text, bool is_flash, string msg_id, string service_id, ref List<LogLines> lines)
         {
 
             bool sms_sent = false;
-           
+
             try
             {
                 //msisdn = msisdn.Substring(3);
@@ -991,22 +972,24 @@ namespace Api.CommonFuncations
                 if (String.IsNullOrEmpty(kannel)) throw new Exception($"invalid setting for OrangeG_SendSMSURL");
 
                 string from = "YellowBet";      // default sender
-                 
-
 
                 switch (Convert.ToInt32(service_id))
                 {
                     case 1184:
                     case 1185:
                     case 1186:
+                    case 1187:
+                    case 1188:
+                    case 1189:
                         // Ivory Coast - change the port to 26013
                         kannel = kannel.Replace(":22013", ":26013");
+                        //from = "NUM d'OR";
                         from = "7717";      // seems to be an access list on Orange side that blocks anything NOT from 7717
                         break;
                 }
 
                 string url = kannel
-                                + "from=" + from 
+                                + "from=" + from
                                 + "&to=" + msisdn
                                 + "&text=" + Uri.EscapeDataString(text)
                                 + "&dlr-mask=24"
@@ -1018,8 +1001,10 @@ namespace Api.CommonFuncations
 
                 lines = Add2Log(lines, "SMS Url = " + url, 100, "SendSMS");
                 // send request and return whether the reponse contains "delivery" 
-                sms_sent = CallSoap.GetURL(url, ref lines).Contains("delivery");
+                var sms_response = CallSoap.GetURL(url, ref lines);
+                sms_sent = sms_response.ToLower().Contains("delivery");
 
+                lines = Add2Log(lines, $"SMS response: {sms_response}", 100, "");
             }
             catch (Exception ex)
             {
@@ -1084,8 +1069,6 @@ namespace Api.CommonFuncations
         }
 
 
-
-        // Special billing for Ivory Coast airtime
         public static BillResponse billIvoryCoastAirTime(string msisdn, double amount, Int64 subscriberId, int serviceId, ref List<LogLines> lines)
         {
 
@@ -1114,7 +1097,7 @@ namespace Api.CommonFuncations
                 var status = json["status"]?.ToString();
                 var txnId = json["txnId"]?.ToString();
                 var message = json["zteDebitReturnMsg"]?.ToString();
-               
+
 
                 if (string.IsNullOrEmpty(status) || status != "1")
                 {
@@ -1151,13 +1134,17 @@ namespace Api.CommonFuncations
 
                     lines = Add2Log(lines, $"inserted BILLING event bill_id={req_id}, for subscriberID={subscriberId}, priceID={price.price_id}", 100, "");
 
+                    string currentDate = DateTime.Now.ToString("dd/MM/yy");
+
                     if (!SendSMSKannel(msisdn
-                           , $"Vous avez été inscrit au prochain tirage de Numero d'Or après un débit réussi de {amount} F depuis votre compte. Croisez les doigts et suivez le lien pour voir le résultat du prochain tirage de Numero d'Or: http://icorgtwn.ydot.co . Bonne chance"
-                           , false
-                           , "OrgICBilling_" + DateTime.Now.ToString("yyyyMMddHHmmss")
-                           , serviceId.ToString()
-                           , ref lines
-                   )) lines = Add2Log(lines, $"failed to send welcome SMS", 100, "");
+                           // , $"Vous avez été inscrit au prochain tirage de Numero d'Or après un débit réussi de {amount} F depuis votre compte. Croisez les doigts et suivez le lien pour voir le résultat du prochain tirage de Numero d'Or: http://icorgtwn.ydot.co . Bonne chance"
+                            
+                            , $"Bonjour ! Votre abonnement au service Numéro d'Or a été renouvelé avec succès après un débit de {amount} F sur votre compte principal. Le tirage au sort aura lieu demain {currentDate} avant 12h et est consultable via *590*5#. Bonne chance ! Vous pouvez stoper l'abonnement à tout moment en composant le *590*6#"
+                            , false
+                            , "OrgICBilling_" + DateTime.Now.ToString("yyyyMMddHHmmss")
+                            , serviceId.ToString()
+                            , ref lines
+                    )) lines = Add2Log(lines, $"failed to send welcome SMS", 100, "");
 
 
                     return new BillResponse()
