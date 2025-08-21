@@ -38,9 +38,50 @@ namespace Api.Controllers
         //}
 
 
+        // OPTIONS: api/Login - Handle CORS preflight request
+        [HttpOptions]
+        public void Options()
+        {
+            // CORS origin check for preflight request
+            string origin = HttpContext.Current.Request.Headers["Origin"];
+            if (!string.IsNullOrEmpty(origin) 
+                && (
+                    origin.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase)
+                    || origin.EndsWith(".ydot.co", StringComparison.OrdinalIgnoreCase)
+                    || origin.EndsWith(".ydgames.co", StringComparison.OrdinalIgnoreCase)
+                    || origin.EndsWith(".ydplatform.com", StringComparison.OrdinalIgnoreCase)
+                    || origin.EndsWith(".ydaplatform.com", StringComparison.OrdinalIgnoreCase)
+                   )
+               )
+            {
+                HttpContext.Current.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+                HttpContext.Current.Response.Headers.Add("Access-Control-Allow-Methods", "POST, OPTIONS");
+                HttpContext.Current.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+                HttpContext.Current.Response.Headers.Add("Vary", "Origin");
+            }
+            
+            HttpContext.Current.Response.StatusCode = 200;
+        }
+
         // POST: api/Login
         public LoginResponse Post([FromBody] LoginRequest RequestBody)
         {
+            // CORS origin check for actual request
+            string origin = HttpContext.Current.Request.Headers["Origin"];
+            if (!string.IsNullOrEmpty(origin) 
+                && (
+                    origin.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase)
+                    || origin.EndsWith(".ydot.co", StringComparison.OrdinalIgnoreCase)
+                    || origin.EndsWith(".ydgames.co", StringComparison.OrdinalIgnoreCase)
+                    || origin.EndsWith(".ydplatform.com", StringComparison.OrdinalIgnoreCase)
+                    || origin.EndsWith(".ydaplatform.com", StringComparison.OrdinalIgnoreCase)
+                   )
+               )
+            {
+                HttpContext.Current.Response.Headers.Add("Access-Control-Allow-Origin", origin);
+                HttpContext.Current.Response.Headers.Add("Vary", "Origin");
+            }
+
             LoginResponse ret = CommonFuncations.Login.DoLogin(RequestBody);
             string content_type = HttpContext.Current.Request.ServerVariables["CONTENT_TYPE"];
             if (content_type == "text/xml")
