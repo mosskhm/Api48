@@ -283,6 +283,81 @@ namespace Api.LN
             return "failed to lookup details";
         }
 
+        // Combined method that fetches subscription status and last draw results in a single SMS
+        public static string sms_combined_status_and_results(ref List<LogLines> lines, int operatorID, string msisdn, int last_x_draws = 5)
+        {
+            try
+            {
+                lines = Add2Log(lines, $"Generating combined SMS for msisdn={msisdn}, operatorID={operatorID}", 100, "");
+                
+                // Fetch subscription details
+                List<TWN_drawDetails> subscriptions = fetch_subscribed_drawDetails(ref lines, operatorID, msisdn);
+                
+                // Fetch service IDs for this operator
+                List<int> ServiceIDs = fetch_draw_serviceIds_for_operator(ref lines, operatorID);
+                
+                // Fetch the last X draw results
+                Dictionary<string, List<TWN_Result>> results = fetch_winners(ref lines, String.Join(",", ServiceIDs), DateTime.Today, last_x_draws);
+                
+                List<string> smsLines = new List<string>();
+                
+                // Add subscription status information
+                if (subscriptions.Count > 0)
+                {
+                    foreach (var s in subscriptions)
+                    {
+                        bool isActive = !s.deactivationDate.HasValue || s.deactivationDate < s.subscriptionDate;
+                        string status = isActive ? "actif" : "non actif";
+                        string packAmount = "";
+                        if (s.subscriptionAmount == 50) packAmount = "50F";
+                        else if (s.subscriptionAmount == 100) packAmount = "100F";
+                        else if (s.subscriptionAmount == 250) packAmount = "250F";
+                        else packAmount = s.subscriptionAmount.ToString() + "F";
+                        string renewable = isActive ? "Renouvelable" : "non renouvelable";
+                        smsLines.Add($"Numéro d'Or: Vous êtes {status} sur le pack de {packAmount}. {renewable}.");
+                        break; // Only show first subscription
+                    }
+                }
+                else
+                {
+                    smsLines.Add("Numéro d'Or: Vous n'êtes actuellement abonné à aucun pack.");
+                }
+                
+                // Add draw results section
+                smsLines.Add("Les tirages précédents");
+                
+                if (results.Count > 0)
+                {
+                    int count = 0;
+                    foreach (var r in results.OrderByDescending(x => x.Key))
+                    {
+                        if (count >= last_x_draws) break;
+                        foreach (TWN_Result e in r.Value)
+                        {
+                            if (count >= last_x_draws) break;
+                            string formattedDate = DateTime.Parse(r.Key).ToString("dd/MM");
+                            string winningNumber = operatorID == 32 ? "07" + e.winningNumber : e.winningNumber;
+                            smsLines.Add($"{formattedDate} : {winningNumber}");
+                            count++;
+                        }
+                    }
+                }
+                else
+                {
+                    smsLines.Add("Aucun résultat de tirage disponible.");
+                }
+                
+                string finalMessage = String.Join("\n", smsLines);
+                lines = Add2Log(lines, $"Generated SMS message: {finalMessage}", 100, "");
+                return finalMessage;
+            }
+            catch (Exception ex)
+            {
+                lines = Add2Log(lines, $"!! Combined SMS generation failed: {ex.Message}\n\n{ex.StackTrace}", 100, "");
+                return "Erreur lors de la génération du message.";
+            }
+        }
+
     
            
     }

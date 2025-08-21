@@ -157,25 +157,14 @@ namespace Api.MADAPI
 
             try
             {
-
                 var stream = context.Request.InputStream;
                 byte[] buffer = new byte[stream.Length];
                 stream.Read(buffer, 0, buffer.Length);
                 string xml = System.Text.Encoding.UTF8.GetString(buffer);
                 lines = Add2Log(lines, "Incomming XML = " + xml, 100, "ussd_ic590_m");
 
-                /* dump the incoming variables
-                foreach (String key in context.Request.QueryString.AllKeys)
-                {
-                    lines = Add2Log(lines, "Key: " + key + " Value: " + context.Request.QueryString[key], 100, "ussd_ic590_m");
-                }
-
-                foreach (String key in context.Request.ServerVariables.AllKeys)
-                {
-                    lines = Add2Log(lines, "Key: " + key + " Value: " + context.Request.ServerVariables[key], 100, "ussd_ic590_m");
-                }
-                */
-
+                
+                
                 string ussdString = "", cu_id = "", ussd_soap = ""; ;
                 string menu_2_display = "";
                 cu_id = context.Request.QueryString["cu_id"];
@@ -190,9 +179,62 @@ namespace Api.MADAPI
                 MSISDN = (String.IsNullOrEmpty(MSISDN) ? "25205123456" : MSISDN);   // default to a test number if not specified -- TODO! should actually fail
                 lines = Add2Log(lines, " MSISDN = " + MSISDN, 100, "");
 
-                ussdString = context.Request.QueryString["ussd_string"];
-                ussdString = (String.IsNullOrEmpty(ussdString) ? "590" : ussdString);
-                lines = Add2Log(lines, " ussdString = " + ussdString, 100, "ussd_mo");
+                            ussdString = context.Request.QueryString["ussd_string"];
+            
+            // Check for Myriad's user-entry header (primary method for user input)
+            string user_entry_header = context.Request.Headers["user-entry"];
+            string user_entry_server = context.Request.ServerVariables["HTTP_USER_ENTRY"];
+                
+            // Use Myriad's user-entry header if available, otherwise use query string
+            if (!String.IsNullOrEmpty(user_entry_header))
+            {
+                ussdString = user_entry_header;
+                lines = Add2Log(lines, "Using user-entry header: " + ussdString, 100, "ussd_ic590_m");
+            }
+            else if (!String.IsNullOrEmpty(user_entry_server))
+            {
+                ussdString = user_entry_server;
+                lines = Add2Log(lines, "Using HTTP_USER_ENTRY: " + ussdString, 100, "ussd_ic590_m");
+            }
+                
+                // If not found in query string, try to extract from request body (JSON format)
+                if (String.IsNullOrEmpty(ussdString) && !String.IsNullOrEmpty(xml))
+                {
+                    try
+                    {
+                        // Try to parse as JSON
+                        if (xml.Trim().StartsWith("{"))
+                        {
+                            var jsonDoc = JsonDocument.Parse(xml);
+                            if (jsonDoc.RootElement.TryGetProperty("ussdString", out var ussdStringElement))
+                            {
+                                ussdString = ussdStringElement.GetString();
+                                lines = Add2Log(lines, "Extracted ussdString from JSON body: " + ussdString, 100, "ussd_ic590_m");
+                            }
+                            else if (jsonDoc.RootElement.TryGetProperty("user_input", out var userInputElement))
+                            {
+                                ussdString = userInputElement.GetString();
+                                lines = Add2Log(lines, "Extracted user_input from JSON body: " + ussdString, 100, "ussd_ic590_m");
+                            }
+                            else if (jsonDoc.RootElement.TryGetProperty("input", out var inputElement))
+                            {
+                                ussdString = inputElement.GetString();
+                                lines = Add2Log(lines, "Extracted input from JSON body: " + ussdString, 100, "ussd_ic590_m");
+                            }
+                            else
+                            {
+                                lines = Add2Log(lines, "JSON body found but no ussdString/user_input/input field: " + xml, 100, "ussd_ic590_m");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        lines = Add2Log(lines, "Failed to parse JSON body: " + ex.Message, 100, "ussd_ic590_m");
+                    }
+                }
+                
+                            ussdString = (String.IsNullOrEmpty(ussdString) ? "590" : ussdString);
+            lines = Add2Log(lines, "Final ussdString = " + ussdString, 100, "ussd_ic590_m");
 
                 string spID = "590", ServiceID = "", serviceCode = "590", linkid = "", receiveCB = "FFFFFFFF", senderCB = "186597739";
 
@@ -202,29 +244,55 @@ namespace Api.MADAPI
                 {
                     lines = Add2Log(lines, " USSD Main Code ID = " + umc.ussd_id, 100, "ivr_subscribe");
 
-                    USSDSession ussd_session = ussdString == "590" ? null : DataLayer.DBQueries.GetLastUSSDSession(MSISDN, umc.ussd_id, ref lines);
-
+                    USSDSession ussd_session = DataLayer.DBQueries.GetLastUSSDSession(MSISDN, umc.ussd_id, ref lines);
+                    if (ussdString == "590")
+                    {
+                        ussd_session = null;
+                    }
+                    
                     int action_id = (ussd_session == null ? 0 : ussd_session.action_id);
                     USSDMenu ussd_menu = GetUSSDMenu(umc.ussd_id, ussdString, action_id, ussd_session, ref lines);
-                    if (ussd_menu == null) lines = Add2Log(lines, " !! FAILED to fetch ussd_menu ID=" + umc.ussd_id, 100, "");
+                    if (ussd_menu == null) 
+                    {
+                        lines = Add2Log(lines, " !! FAILED to fetch ussd_menu ID=" + umc.ussd_id, 100, "");
+                        lines = Add2Log(lines, "Debug info - ussd_id: " + umc.ussd_id + ", ussdString: " + ussdString + ", action_id: " + action_id, 100, "");
+                    }
                     else
                     {
-
-                        lines = Add2Log(lines, " USSD Menu topic = " + ussd_menu.topic_name + ", Action = " + ussd_menu.action_name + " (" + ussd_menu.action_id + ")", 100, "");
+                        lines = Add2Log(lines, " USSD Menu topic = " + ussd_menu.topic_name + ", Action = " + ussd_menu.action_name, 100, "ivr_subscribe");
                         
                         // using MTN CONGO for Orange because they also speak French
                         ussd_soap = Api.CommonFuncations.USSD.MTNCongoUSSDBehaviuer(service, ussdString, ServiceID, MSISDN, linkid, receiveCB, senderCB, serviceCode, ussd_menu, ussd_session, out momo_request, ref lines, out menu_2_display, out is_close, "");
+                        lines = Add2Log(lines, "MTNCongoUSSDBehaviuer returned - menu_2_display length: " + (menu_2_display?.Length ?? 0) + ", is_close: " + is_close, 100, "");
 
-                        // add info if actionID=58
-                        if (ussd_menu.action_id == 58)
+                        // add info if actionID=190
+                        //if (ussd_menu.action_id == 190 && ussd_menu.prev_action_id == 1)
+                        if (ussd_menu.action_name == "Display35" || ussd_menu.action_id == 190)
                         {
-                            menu_2_display += "\n" + LN.LNservice.sms_last_results(ref lines, 32, 2);
+                           // menu_2_display += "\n" + LN.LNservice.sms_last_results(ref lines, 32, 2);
 
-                            // also send additional details via sms
-                            if (MSISDN.StartsWith("225"))
+                            // send sms with more info to the user
+                            if (MSISDN.StartsWith("225") || MSISDN.StartsWith("+225"))
                             {
-                                sendSMS(service, MSISDN, LN.LNservice.sms_last_results(ref lines, 32, 7));
-                                sendSMS(service, MSISDN, LN.LNservice.sms_subscription_status(ref lines, 32, MSISDN));
+                                string message = @"Pour souscrire à Numéro d'Or, envoyez NO1/ NO2 ou NO3) au 7717 ou via *590*5#. 
+                                                    Pour se désabonner, envoyez STOP NO1 ( NO2 ou STOP NO3) au 7717. 
+                                                    Pour accéder au portail cliquez sur ce lien: (https://orglnic.ydaplatform.com)";
+
+                                sendSMS(service, MSISDN, message);
+                                //sendSMS(service, MSISDN, LN.LNservice.sms_subscription_status(ref lines, 32, MSISDN));
+                            }
+                        }
+                        // add info if actionID=191
+                        //if (ussd_menu.action_id == 191 && ussd_menu.prev_action_id == 2)
+                        if (ussd_menu.action_name == "Display36" || ussd_menu.action_id == 191)
+                        {
+                            //menu_2_display += "\n" + LN.LNservice.sms_last_results(ref lines, 32, 2);
+
+                            // send combined SMS with subscription status and last 5 draw results
+                            if (MSISDN.StartsWith("225") || MSISDN.StartsWith("+225"))
+                            {
+                                string combinedMessage = LN.LNservice.sms_combined_status_and_results(ref lines, 32, MSISDN, 5);
+                                sendSMS(service, MSISDN, combinedMessage);
                             }
                         }
 
@@ -233,12 +301,6 @@ namespace Api.MADAPI
                         
                         string response_soap = BuildMMenu(MSISDN, menu_2_display, is_close, action_id, ussd_session, ussd_menu, ref lines);
                         context.Response.Write(response_soap);
-
-                        // log response
-                        var jsonDoc = JsonDocument.Parse(response_soap);
-                        var options = new JsonSerializerOptions { WriteIndented = true };
-                        string formattedResponse = System.Text.Json.JsonSerializer.Serialize(jsonDoc.RootElement, options);
-                        lines = Add2Log(lines, "Sending response: len=" + response_soap.Length + "\n" + formattedResponse, 100, "");
 
                     }
                 }

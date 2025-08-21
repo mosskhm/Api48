@@ -144,10 +144,37 @@ namespace Api.CommonFuncations
             List<LogLines> lines = new List<LogLines>();
             lines = Add2Log(lines, "*****************************", Convert.ToInt32(ConfigurationManager.AppSettings["log_level"]), "SendSMS_" + RequestBody.ServiceID);
 
+            // Null check for RequestBody
+            if (RequestBody == null)
+            {
+                lines = Add2Log(lines, "ERROR: RequestBody is null", 100, "SendSMS");
+                lines = Write2Log(lines);
+                return new SendSMSResponse()
+                {
+                    ResultCode = 2000,
+                    Description = "Bad Parameters - RequestBody is null"
+                };
+            }
+
             if (ValidateRequest1(RequestBody, ref lines))
             {
                 string token_id = "";
                 ServiceClass service = GetServiceByServiceID(RequestBody.ServiceID, ref lines);
+                
+                // Null check for service
+                if (service == null)
+                {
+                    lines = Add2Log(lines, $"ERROR: Service is null for ServiceID: {RequestBody.ServiceID}", 100, "SendSMS");
+                    lines = Write2Log(lines);
+                    return new SendSMSResponse()
+                    {
+                        ResultCode = 5001,
+                        Description = "Internal Error - Service not found"
+                    };
+                }
+
+                lines = Add2Log(lines, $"Service found: {service.service_name} (ID: {service.service_id})", 100, "SendSMS");
+
                 if (service.add_zero)
                 {
                     string msisdn = RequestBody.MSISDN.ToString();
@@ -165,6 +192,20 @@ namespace Api.CommonFuncations
                 //result = DBQueries.ValidateSMSRequestLight(RequestBody, ref lines);
                 result = Api.Cache.Services.ValidateSMSRequestLight(RequestBody, ref lines);
 
+                // Null check for result
+                if (result == null)
+                {
+                    lines = Add2Log(lines, "ERROR: ValidateSMSRequestLight returned null", 100, "SendSMS");
+                    lines = Write2Log(lines);
+                    return new SendSMSResponse()
+                    {
+                        ResultCode = 5001,
+                        Description = "Internal Error - Validation failed"
+                    };
+                }
+
+                lines = Add2Log(lines, $"Validation result: RetCode={result.RetCode}, Description={result.Description}", 100, "SendSMS");
+
                 bool is_flash = (!String.IsNullOrEmpty(RequestBody.IsFlash) ? (RequestBody.IsFlash == "1" ? true : false) : false);
                 if ((result != null) && (result.RetCode == 1000))
                 {
@@ -172,6 +213,9 @@ namespace Api.CommonFuncations
                     Int64 msg_id = 1;
                     string mysql_q = "insert into send_sms (msisdn, service_id, msg_content, sent_date_time, partner_transaction_id) values(" + RequestBody.MSISDN + "," + RequestBody.ServiceID + ",'" + RequestBody.Text.Replace("'", "''") + "',now(), '" + RequestBody.TransactionID + "')";
                     msg_id = Api.DataLayer.DBQueries.ExecuteQueryReturnInt64(mysql_q, "DBConnectionString_161", ref lines);
+                    
+                    lines = Add2Log(lines, $"SMS record inserted with msg_id: {msg_id}", 100, "SendSMS");
+                    
                     //if (s_u != null)
                     //{
                     //    if (!String.IsNullOrEmpty(s_u.sms_dlr_url) && s_u.sms_dlr_url != "0")
@@ -194,10 +238,36 @@ namespace Api.CommonFuncations
                             RequestBody.TokenID = token_id;
                             result = DBQueries.ValidateSMSRequestLight(RequestBody, ref lines);
 
+                            // Re-check result after service change
+                            if (result == null)
+                            {
+                                lines = Add2Log(lines, "ERROR: ValidateSMSRequestLight returned null after service change", 100, "SendSMS");
+                                lines = Write2Log(lines);
+                                return new SendSMSResponse()
+                                {
+                                    ResultCode = 5001,
+                                    Description = "Internal Error - Validation failed after service change"
+                                };
+                            }
                         }
 
                         service = GetServiceByServiceID(RequestBody.ServiceID, ref lines);
+                        
+                        // Re-check service after potential service change
+                        if (service == null)
+                        {
+                            lines = Add2Log(lines, $"ERROR: Service is null after service change for ServiceID: {RequestBody.ServiceID}", 100, "SendSMS");
+                            lines = Write2Log(lines);
+                            return new SendSMSResponse()
+                            {
+                                ResultCode = 5001,
+                                Description = "Internal Error - Service not found after service change"
+                            };
+                        }
+
                         result.operator_id = service.operator_id;
+                        lines = Add2Log(lines, $"Processing SMS for operator_id: {result.operator_id}, service: {service.service_name}", 100, "SendSMS");
+                        
                         switch (result.operator_id)
                         {
                             case 25:
@@ -604,11 +674,46 @@ namespace Api.CommonFuncations
                                 }
                                 else
                                 {
+                                    // Null checks for critical variables before SOAP call
+                                    if (result == null)
+                                    {
+                                        lines = Add2Log(lines, "ERROR: result is null before SOAP call", 100, "SendSMS");
+                                        lines = Write2Log(lines);
+                                        return new SendSMSResponse()
+                                        {
+                                            ResultCode = 5001,
+                                            Description = "Internal Error - Validation result is null"
+                                        };
+                                    }
+
                                     string endpoint = Cache.ServerSettings.GetServerSettings("SMSEndPointURL", ref lines);
+                                    if (String.IsNullOrEmpty(endpoint))
+                                    {
+                                        lines = Add2Log(lines, "ERROR: SMSEndPointURL setting is null or empty", 100, "SendSMS");
+                                        lines = Write2Log(lines);
+                                        return new SendSMSResponse()
+                                        {
+                                            ResultCode = 5001,
+                                            Description = "Internal Error - SMSEndPointURL not configured"
+                                        };
+                                    }
+
                                     string soap = BuildSendSMSSoap(result.MSISDN.ToString(), result.SPID.ToString(), result.Password, result.RealServiceID.ToString(), RequestBody.Text, result.SMSMTCode.ToString(), RequestBody.TransactionID, endpoint, RequestBody.AuthrizationID, RequestBody.LinkID);
                                     lines = Add2Log(lines, "Soap = " + soap, 100, "SendSMS");
                                     string sdp_string = "SDPSendSMSURL_" + result.operator_id + (result.is_staging == true ? "_STG" : "");
                                     string soap_url = Cache.ServerSettings.GetServerSettings(sdp_string, ref lines);
+                                    
+                                    if (String.IsNullOrEmpty(soap_url))
+                                    {
+                                        lines = Add2Log(lines, $"ERROR: {sdp_string} setting is null or empty", 100, "SendSMS");
+                                        lines = Write2Log(lines);
+                                        return new SendSMSResponse()
+                                        {
+                                            ResultCode = 5001,
+                                            Description = "Internal Error - SOAP URL not configured"
+                                        };
+                                    }
+                                    
                                     lines = Add2Log(lines, "Sending to URL = " + soap_url, 100, "SendSMS");
                                     string response = CommonFuncations.CallSoap.CallSoapRequest(soap_url, soap, ref lines);
                                     lines = Add2Log(lines, "SendSMS Response = " + response, 100, "SendSMS");
@@ -649,12 +754,22 @@ namespace Api.CommonFuncations
                                 break;
                         }
                     }
+                    else
+                    {
+                        lines = Add2Log(lines, $"ERROR: Failed to insert SMS record. msg_id: {msg_id}", 100, "SendSMS");
+                        ret = new SendSMSResponse()
+                        {
+                            ResultCode = 5001,
+                            Description = "Internal Error - Failed to insert SMS record"
+                        };
+                    }
                     
                 }
                 else
                 {
                     if (result == null)
                     {
+                        lines = Add2Log(lines, "ERROR: result is null after validation", 100, "SendSMS");
                         ret = new SendSMSResponse()
                         {
                             ResultCode = 5001,
@@ -663,6 +778,7 @@ namespace Api.CommonFuncations
                     }
                     else
                     {
+                        lines = Add2Log(lines, $"Validation failed: RetCode={result.RetCode}, Description={result.Description}", 100, "SendSMS");
                         ret = new SendSMSResponse()
                         {
                             ResultCode = result.RetCode,
@@ -674,6 +790,7 @@ namespace Api.CommonFuncations
             }
             else
             {
+                lines = Add2Log(lines, "ERROR: ValidateRequest1 failed", 100, "SendSMS");
                 ret = new SendSMSResponse()
                 {
                     ResultCode = 2000,
@@ -681,6 +798,18 @@ namespace Api.CommonFuncations
                 };
 
             }
+            
+            // Null check for ret before logging
+            if (ret == null)
+            {
+                lines = Add2Log(lines, "ERROR: ret is null at end of method", 100, "SendSMS");
+                ret = new SendSMSResponse()
+                {
+                    ResultCode = 5001,
+                    Description = "Internal Error - Response object is null"
+                };
+            }
+            
             string text = "RetCode = " + ret.ResultCode + ", Description = " + ret.Description;
             lines = Add2Log(lines, text, log_level, "SendSMS");
             lines = Write2Log(lines);

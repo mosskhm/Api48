@@ -3064,6 +3064,37 @@ namespace Api.CommonFuncations
                 DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ",1, '" + ussdString + "', " + ussd_menu.action_id + ", " + (ussd_session == null ? 0 : ussd_session.page_number) + "," + (ussd_session == null ? 0 : ussd_session.odd_page) + "," + (ussd_session == null ? 0 : ussd_session.game_id) + "," + topic_id + ",'" + user_session_id + "');", "DBConnectionString_161", ref lines);
             }
 
+            // Handle information display actions - check by action name from logs
+            if (ussd_menu.action_name == "Display35" || ussd_menu.action_id == 190)
+            {
+                // This is the "info sur Num d'Or" menu - keep session open as requested
+                // Add debugging to see what's in the menu
+                lines = Add2Log(lines, "Display35 Handler: menu_id=" + ussd_menu.menu_id + ", menu_2_display='" + ussd_menu.menu_2_display + "'", 100, "MTNCongoUSSDBehaviuer");
+                
+                // If menu_2_display is empty, set a fallback message
+                if (String.IsNullOrEmpty(menu_2_display) || String.IsNullOrEmpty(ussd_menu.menu_2_display))
+                {
+                    menu_2_display = "vous recevrez un SMS sous peu" + Environment.NewLine + "0. Retour";
+                    lines = Add2Log(lines, "Display35: Using fallback message", 100, "MTNCongoUSSDBehaviuer");
+                }
+                
+                // Update session tracking with status = 0 (continue session)
+                DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ",0, '" + ussdString + "', " + ussd_menu.action_id + ", " + (ussd_session == null ? 0 : ussd_session.page_number) + "," + (ussd_session == null ? 0 : ussd_session.odd_page) + "," + (ussd_session == null ? 0 : ussd_session.game_id) + "," + topic_id + ",'" + user_session_id + "');", "DBConnectionString_161", ref lines);
+            }
+            else if (ussd_menu.action_name == "Display36" || ussd_menu.action_id == 191)
+            {
+                // This is the "tirages" menu - continue session
+                lines = Add2Log(lines, "Display36 Handler: menu_id=" + ussd_menu.menu_id + ", menu_2_display='" + ussd_menu.menu_2_display + "'", 100, "MTNCongoUSSDBehaviuer");
+                
+                // If menu_2_display is empty, set a fallback message
+                if (String.IsNullOrEmpty(menu_2_display) || String.IsNullOrEmpty(ussd_menu.menu_2_display))
+                {
+                    menu_2_display = "vous recevrez un SMS sous peu" + Environment.NewLine + "0. Retour";
+                    lines = Add2Log(lines, "Display36: Using fallback message", 100, "MTNCongoUSSDBehaviuer");
+                }
+                
+                DataLayer.DBQueries.ExecuteQuery("insert into ussd_sessions (msisdn, ussd_id, date_time, menu_id, status, selected_ussdstring, action_id, page_number, odd_page, game_id, topic_id, user_session_id) value(" + MSISDN + ", " + ussd_menu.ussd_id + ",now(), " + ussd_menu.menu_id + ",0, '" + ussdString + "', " + ussd_menu.action_id + ", " + (ussd_session == null ? 0 : ussd_session.page_number) + "," + (ussd_session == null ? 0 : ussd_session.odd_page) + "," + (ussd_session == null ? 0 : ussd_session.game_id) + "," + topic_id + ",'" + user_session_id + "');", "DBConnectionString_161", ref lines);
+            }
             if (String.IsNullOrEmpty(result))
             {
                 switch (topic_id)
