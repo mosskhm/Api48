@@ -161,7 +161,7 @@ namespace Api.CommonFuncations
                 string token_id = "";
                 ServiceClass service = GetServiceByServiceID(RequestBody.ServiceID, ref lines);
                 
-                // Null check for service --
+                // Null check for service 
                 if (service == null)
                 {
                     lines = Add2Log(lines, $"ERROR: Service is null for ServiceID: {RequestBody.ServiceID}", 100, "SendSMS");
