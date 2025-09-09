@@ -144,7 +144,7 @@ namespace Api.CommonFuncations
             List<LogLines> lines = new List<LogLines>();
             lines = Add2Log(lines, "*****************************", Convert.ToInt32(ConfigurationManager.AppSettings["log_level"]), "SendSMS_" + RequestBody.ServiceID);
 
-            // Null check for RequestBody --
+            // Null check for RequestBody
             if (RequestBody == null)
             {
                 lines = Add2Log(lines, "ERROR: RequestBody is null", 100, "SendSMS");
