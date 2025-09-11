@@ -16,7 +16,6 @@ namespace Api.DEP
     /// <summary>
     /// Summary description for Subscription
     /// </summary>
-    /// 
     public class Subscription : IHttpHandler
     {
 
