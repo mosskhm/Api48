@@ -160,6 +160,30 @@ namespace Api.DEP
                     {
                         lines = Add2Log(lines, "Service was found " + service.service_name, 100, "orange_guinea_billing");
                         real_subid = Api.DataLayer.DBQueries.SelectQueryReturnString("select subscriber_id from dep_subscribers where dep_subscription_id = " + subscription_id, ref lines);
+
+                        //2025-09-11: if user already exists in dep_subscribers then this is a billing event that should go to Amplitude
+                        if (!String.IsNullOrEmpty(real_subid))
+                        {
+                            // Add Amplitude hook
+                            List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
+
+                            Api.CommonFuncations.Amplitude.Call_Amplitude(new AmplitudeRequest
+                            {
+                                msisdn = Convert.ToInt64(user_msisdn),
+                                task = "DEP-billing",
+                                service_id = service.service_id,
+                                retcode = Convert.ToInt32(status_id),
+                                amount = Convert.ToDouble(amount),
+                                result_msg = "result = " + result_name + ", status = " + status_name,
+                                http = context.Request,
+                                billing_date = DateTime.TryParse(created_at, out DateTime dt) ? dt : DateTime.Now,
+                                campaign_name = campaigns.Find(x => x.subscribe_service_id == service.service_id)?.view_name ?? "",     // lookup if there is a campaign active for this service id
+                                service_name = service.service_name,
+                                channel = channel_name,
+                                tracking_id = json_response.ext_ref
+                            });
+                        }
+
                         if (String.IsNullOrEmpty(real_subid))
                         {
                             //2022-01-31T09:41:22+02:00
@@ -167,6 +191,26 @@ namespace Api.DEP
                             Api.DataLayer.DBQueries.ExecuteQuery("insert into dep_subscribers (dep_subscription_id, subscriber_id, channel_name) values(" + subscription_id + "," + real_subid + ",'" + channel_name + "')", ref lines);
                             user_was_added = true;
                             send_subscription_notification = true;
+
+                            //2025-09-11 Because Subscription.ashx.cs is being used for billing events so Subscribe event to amplitude should only happen if user doesn't already exist in dep_subscribers
+                            // Add Amplitude hook
+                            List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
+
+                            Api.CommonFuncations.Amplitude.Call_Amplitude(new AmplitudeRequest
+                            {
+                                msisdn = Convert.ToInt64(user_msisdn),
+                                task = "DEP-subscribe",
+                                service_id = service.service_id,
+                                retcode = Convert.ToInt32(status_id),
+                                amount = Convert.ToDouble(amount),
+                                result_msg = "result = " + result_name + ", status = " + status_name,
+                                http = context.Request,
+                                billing_date = DateTime.TryParse(created_at, out DateTime dt) ? dt : DateTime.Now,
+                                campaign_name = campaigns.Find(x => x.subscribe_service_id == service.service_id)?.view_name ?? "",     // lookup if there is a campaign active for this service id
+                                service_name = service.service_name,
+                                channel = channel_name,
+                                tracking_id = json_response.ext_ref
+                            });
                         }
                         if (!String.IsNullOrEmpty(amount) && result_name == "SUCCESS")
                         {
@@ -191,7 +235,7 @@ namespace Api.DEP
                                 send_billing_notification = true;
                             }
                         }
-
+                        /*
                         // Add Amplitude hook
                         List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
 
@@ -209,7 +253,7 @@ namespace Api.DEP
                             service_name = service.service_name,
                             channel = channel_name,
                             tracking_id = json_response.ext_ref
-                        });
+                        });*/
 
                     }
                     else
