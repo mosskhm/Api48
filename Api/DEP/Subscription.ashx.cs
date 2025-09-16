@@ -88,6 +88,27 @@ namespace Api.DEP
                                 real_subid = Api.DataLayer.DBQueries.ExecuteQueryReturnInt64("insert into subscribers (msisdn, service_id, subscription_date, state_id) values(" + user_msisdn + "," + service.service_id + ",'" + mytime + "',1)", ref lines).ToString();
 
                                 Api.DataLayer.DBQueries.ExecuteQuery("insert into dep_subscribers (dep_subscription_id, subscriber_id, channel_name) values(" + subscription_id + "," + real_subid + ",'" + channel_name + "')", ref lines);
+
+                                //2025-09-16 Because Subscription.ashx.cs is being used for billing events so Subscribe event to amplitude should only happen if user doesn't already exist in dep_subscribers
+                                // Add Amplitude hook
+                                List<CampaignTracking> campaigns_ = Cache.Campaigns.GetCampaigns(ref lines);
+
+                                Api.CommonFuncations.Amplitude.Call_Amplitude(new AmplitudeRequest
+                                {
+                                    msisdn = Convert.ToInt64(user_msisdn),
+                                    task = "DEP-subscribe",
+                                    service_id = service.service_id,
+                                    retcode = Convert.ToInt32(status_id),
+                                    amount = Convert.ToDouble(amount),
+                                    result_msg = "result = " + json_response.result_name + ", status = " + status_name,
+                                    http = context.Request,
+                                    billing_date = DateTime.TryParse(created_at, out DateTime dta) ? dta : DateTime.Now,
+                                    campaign_name = campaigns_.Find(x => x.subscribe_service_id == service.service_id)?.view_name ?? "",     // lookup if there is a campaign active for this service id
+                                    service_name = service.service_name,
+                                    channel = channel_name,
+                                    tracking_id = json_response.ext_ref
+                                });
+
                                 if (!String.IsNullOrEmpty(ext_ref))
                                 {
                                     Int64 number;
