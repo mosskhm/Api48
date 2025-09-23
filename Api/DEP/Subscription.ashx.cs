@@ -91,7 +91,7 @@ namespace Api.DEP
 
                                 //2025-09-16 Because Subscription.ashx.cs is being used for billing events so Subscribe event to amplitude should only happen if user doesn't already exist in dep_subscribers
                                 // Add Amplitude hook
-                                List<CampaignTracking> campaigns_ = Cache.Campaigns.GetCampaigns(ref lines);
+                                List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
 
                                 Api.CommonFuncations.Amplitude.Call_Amplitude(new AmplitudeRequest
                                 {
@@ -103,7 +103,7 @@ namespace Api.DEP
                                     result_msg = "result = " + json_response.result_name + ", status = " + status_name,
                                     http = context.Request,
                                     billing_date = DateTime.TryParse(created_at, out DateTime dta) ? dta : DateTime.Now,
-                                    campaign_name = campaigns_.Find(x => x.subscribe_service_id == service.service_id)?.view_name ?? "",     // lookup if there is a campaign active for this service id
+                                    campaign_name = campaigns.Find(x => x.subscribe_service_id == service.service_id)?.view_name ?? "",     // lookup if there is a campaign active for this service id
                                     service_name = service.service_name,
                                     channel = channel_name,
                                     tracking_id = json_response.ext_ref
@@ -128,8 +128,26 @@ namespace Api.DEP
                             Api.DataLayer.DBQueries.ExecuteQuery("update subscribers set state_id = 2, deactivation_date = now() where subscriber_id = " + real_subid, ref lines);
                             send_unsubscribe_notification = true;
 
-                        }
+                            // Add Amplitude hook
+                            List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
 
+                            Api.CommonFuncations.Amplitude.Call_Amplitude(new AmplitudeRequest
+                            {
+                                msisdn = Convert.ToInt64(user_msisdn),
+                                task = "DEP-unsubscribe",
+                                service_id = service.service_id,
+                                retcode = Convert.ToInt32(status_id),
+                                result_msg = "result = none, status = " + status_name,
+                                http = context.Request,
+                                billing_date = DateTime.TryParse(created_at, out DateTime dt) ? dt : DateTime.Now,
+                                campaign_name = campaigns.Find(x => x.subscribe_service_id == service.service_id)?.view_name ?? "",     // lookup if there is a campaign active for this service id
+                                service_name = service.service_name,
+                                channel = channel_name,
+                                tracking_id = json_response.ext_ref
+
+                            });
+                        }
+                        /*
                         // Add Amplitude hook
                         List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
 
@@ -147,7 +165,7 @@ namespace Api.DEP
                             channel = channel_name,
                             tracking_id = json_response.ext_ref
 
-                        });
+                        });*/
 
                     }
                     else
