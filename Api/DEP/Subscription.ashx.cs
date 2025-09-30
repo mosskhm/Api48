@@ -304,10 +304,6 @@ namespace Api.DEP
                 {
                     Api.CommonFuncations.Notifications.SendSubscriptionNotification(user_msisdn, services[0].service_id.ToString(), my_date_time, ref lines);
                 }
-
-
- 
-
             }
             catch (Exception ex)
             {

@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Services.Description;
 using static Api.Cache.Prices;
 using static Api.Cache.Services;
+using static Api.CommonFuncations.Amplitude;
+using static Api.DataLayer.DBQueries;
 using static Api.Logger.Logger;
 
 namespace Api.handlers
@@ -106,6 +108,25 @@ namespace Api.handlers
                                         {
                                             Api.DataLayer.DBQueries.ExecuteQuery("insert into billing (subscriber_id, billing_date_time, price_id) values(" + sub_id + ",now(), " + price_c.price_id + ")", ref lines);
                                         }
+
+                                        // Add Amplitude Hook
+                                        List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
+
+                                        Api.CommonFuncations.Amplitude.Call_Amplitude(new AmplitudeRequest
+                                        {
+                                            msisdn = Convert.ToInt64(user_msisdn),
+                                            task = "TELKOM-billing",
+                                            service_id = service.service_id,
+                                            retcode = Convert.ToInt32(status_id),
+                                            amount = Convert.ToDouble(amount),
+                                            result_msg = "result = " + json_response.result_name + ", status = " + status_name,
+                                            http = context.Request,
+                                            billing_date = DateTime.TryParse(created_at, out DateTime dta) ? dta : DateTime.Now,
+                                            campaign_name = campaigns.Find(x => x.subscribe_service_id == service.service_id)?.view_name ?? "",     // lookup if there is a campaign active for this service id
+                                            service_name = service.service_name,
+                                            channel = channel_name,
+                                            tracking_id = json_response.ext_ref
+                                        });
                                     }
                                 }
                                 else
@@ -137,6 +158,25 @@ namespace Api.handlers
                                     {
                                         Api.DataLayer.DBQueries.ExecuteQuery("update tracking.tracking_requests set msisdn = " + user_msisdn + ", subscriber_id = " + sub_id + " where id = " + ext_ref, ref lines);
                                     }
+
+                                    // Add Amplitude Hook
+                                    List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
+
+                                    Api.CommonFuncations.Amplitude.Call_Amplitude(new AmplitudeRequest
+                                    {
+                                        msisdn = Convert.ToInt64(user_msisdn),
+                                        task = "TELKOM-subscribe",
+                                        service_id = service.service_id,
+                                        retcode = Convert.ToInt32(status_id),
+                                        amount = Convert.ToDouble(amount),
+                                        result_msg = "result = " + json_response.result_name + ", status = " + status_name,
+                                        http = context.Request,
+                                        billing_date = DateTime.TryParse(created_at, out DateTime dta) ? dta : DateTime.Now,
+                                        campaign_name = campaigns.Find(x => x.subscribe_service_id == service.service_id)?.view_name ?? "",     // lookup if there is a campaign active for this service id
+                                        service_name = service.service_name,
+                                        channel = channel_name,
+                                        tracking_id = json_response.ext_ref
+                                    });
                                 }
                             }
                         }
