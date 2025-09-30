@@ -127,7 +127,6 @@ namespace Api.DEP
                         {
                             Api.DataLayer.DBQueries.ExecuteQuery("update subscribers set state_id = 2, deactivation_date = now() where subscriber_id = " + real_subid, ref lines);
                             send_unsubscribe_notification = true;
-
                             // Add Amplitude hook
                             List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
 
@@ -149,7 +148,7 @@ namespace Api.DEP
                         }
                         /*
                         // Add Amplitude hook
-                        List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
+                        /*List<CampaignTracking> campaigns = Cache.Campaigns.GetCampaigns(ref lines);
 
                         Api.CommonFuncations.Amplitude.Call_Amplitude(new AmplitudeRequest
                         {
